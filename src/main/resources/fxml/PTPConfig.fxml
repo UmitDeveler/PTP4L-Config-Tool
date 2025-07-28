@@ -200,7 +200,8 @@
                             </GridPane>
                         </VBox>
                     </TitledPane>
-                    
+
+
                     <!-- Timing Intervals -->
                     <TitledPane text="Timing Intervals" expanded="true" styleClass="section-pane">
                         <VBox spacing="10">
@@ -209,21 +210,117 @@
                                     <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
                                 </columnConstraints>
-                                
-                                <Label text="Log Sync Interval:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <TextField fx:id="logSyncIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+
+                                <Label text="Log Announce Interval:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="logAnnounceIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                          promptText="Power of 2 in seconds (default: 1)"/>
+
+                                <Label text="Log Sync Interval:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="logSyncIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
                                           promptText="Power of 2 in seconds (default: 0)"/>
-                                
-                                <Label text="Log Announce Interval:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                <TextField fx:id="logAnnounceIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+
+                                <Label text="Oper Log Sync Interval:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <TextField fx:id="operLogSyncInterval" GridPane.columnIndex="1" GridPane.rowIndex="2" 
                                           promptText="Power of 2 in seconds (default: 1)"/>
                                 
-                                <Label text="Log Min Delay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                <TextField fx:id="logMinDelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="2" 
+                                <Label text="Log Min Delay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                <TextField fx:id="logMinDelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="3" 
                                           promptText="Power of 2 in seconds (default: 0)"/>
                                 
-                                <Label text="Log Min Pdelay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                                <TextField fx:id="logMinPdelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="3" 
+                                <Label text="Log Min Pdelay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                                <TextField fx:id="logMinPdelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="4" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Oper Log Pdelay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                                <TextField fx:id="operLogPdelayReqInterval" GridPane.columnIndex="1" GridPane.rowIndex="5" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Announce Receipt Timeout:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                                <TextField fx:id="announceReceiptTimeout" GridPane.columnIndex="1" GridPane.rowIndex="6" 
+                                          promptText="Power of 2 in seconds (default: 3)"/>
+
+                                <Label text="Sync Receipt Timeout:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                                <TextField fx:id="syncReceiptTimeout" GridPane.columnIndex="1" GridPane.rowIndex="7" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Delay Response Timeout:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                                <TextField fx:id="delay_response_timeout" GridPane.columnIndex="1" GridPane.rowIndex="8" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Delay Asymmetry:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                                <TextField fx:id="delayAsymmetryField" GridPane.columnIndex="1" GridPane.rowIndex="9" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Fault Reset Interval:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+                                <TextField fx:id="fault_reset_interval" GridPane.columnIndex="1" GridPane.rowIndex="10" 
+                                          promptText="Power of 2 in seconds (default: 4)"/>
+
+                                <Label text="Neighbor Prop Delay Thresh:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+                                <TextField fx:id="neighborPropDelayThresh" GridPane.columnIndex="1" GridPane.rowIndex="11" 
+                                          promptText="Power of 2 in seconds (default: 200000000)"/>
+
+                                <Label text="Server Only:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+                                <TextField fx:id="serverOnly" GridPane.columnIndex="1" GridPane.rowIndex="12" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="G.8275.portDS Local Priority:" GridPane.columnIndex="0" GridPane.rowIndex="13"/>
+                                <TextField fx:id="G_8275_portDS_localPriority" GridPane.columnIndex="1" GridPane.rowIndex="13" 
+                                          promptText="Power of 2 in seconds (default: 128)"/>
+
+                                <Label text="Allowed Lost Responses:" GridPane.columnIndex="0" GridPane.rowIndex="14"/>
+                                <TextField fx:id="allowedLostResponses" GridPane.columnIndex="1" GridPane.rowIndex="14" 
+                                          promptText="Power of 2 in seconds (default: 3)"/>
+
+                                <Label text="As Capable:" GridPane.columnIndex="0" GridPane.rowIndex="15"/>
+                                <TextField fx:id="asCapable" GridPane.columnIndex="1" GridPane.rowIndex="15" 
+                                          promptText="Power of 2 in seconds (default: auto)"/>
+
+                                <Label text="BMCA:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
+                                <TextField fx:id="BMCA" GridPane.columnIndex="1" GridPane.rowIndex="16" 
+                                          promptText="Power of 2 in seconds (default: ptp)"/>
+
+                                <Label text="Inhibit Announce:" GridPane.columnIndex="0" GridPane.rowIndex="17"/>
+                                <TextField fx:id="inhibit_announce" GridPane.columnIndex="1" GridPane.rowIndex="17" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Inhibit Delay Req:" GridPane.columnIndex="0" GridPane.rowIndex="18"/>
+                                <TextField fx:id="inhibit_delay_req" GridPane.columnIndex="1" GridPane.rowIndex="18" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Ignore Source ID:" GridPane.columnIndex="0" GridPane.rowIndex="19"/>
+                                <TextField fx:id="ignore_source_id" GridPane.columnIndex="1" GridPane.rowIndex="19" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Power Profile 2011 Grandmaster Time Inaccuracy:" GridPane.columnIndex="0" GridPane.rowIndex="20"/>
+                                <TextField fx:id="power_profile_2011_grandmasterTimeInaccuracy" GridPane.columnIndex="1" GridPane.rowIndex="20" 
+                                          promptText="Power of 2 in seconds (default: -1)"/>
+
+                                <Label text="Power Profile 2011 Network Time Inaccuracy:" GridPane.columnIndex="0" GridPane.rowIndex="21"/>
+                                <TextField fx:id="power_profile_2011_networkTimeInaccuracy" GridPane.columnIndex="1" GridPane.rowIndex="21" 
+                                          promptText="Power of 2 in seconds (default: -1)"/>
+
+                                <Label text="Power Profile 2017 Total Time Inaccuracy:" GridPane.columnIndex="0" GridPane.rowIndex="22"/>
+                                <TextField fx:id="power_profile_2017_totalTimeInaccuracy" GridPane.columnIndex="1" GridPane.rowIndex="22" 
+                                          promptText="Power of 2 in seconds (default: -1)"/>
+
+                                <Label text="Power Profile Grandmaster ID:" GridPane.columnIndex="0" GridPane.rowIndex="23"/>
+                                <TextField fx:id="power_profile_grandmasterID" GridPane.columnIndex="1" GridPane.rowIndex="23" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+
+                                <Label text="Power Profile Version:" GridPane.columnIndex="0" GridPane.rowIndex="24"/>
+                                <TextField fx:id="power_profile_version" GridPane.columnIndex="1" GridPane.rowIndex="24" 
+                                          promptText="Power of 2 in seconds (default: none)"/>
+
+                                <Label text="PTP Minor Version:" GridPane.columnIndex="0" GridPane.rowIndex="25"/>
+                                <TextField fx:id="ptp_minor_version" GridPane.columnIndex="1" GridPane.rowIndex="25" 
+                                          promptText="Power of 2 in seconds (default: 1)"/>
+
+                                <Label text="SPP:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
+                                <TextField fx:id="spp" GridPane.columnIndex="1" GridPane.rowIndex="16" 
+                                          promptText="Power of 2 in seconds (default: -1)"/>
+
+                                <Label text="Active Key ID:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
+                                <TextField fx:id="active_key_id" GridPane.columnIndex="1" GridPane.rowIndex="16" 
                                           promptText="Power of 2 in seconds (default: 0)"/>
                             </GridPane>
                         </VBox>
@@ -238,16 +335,12 @@
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
                                 </columnConstraints>
                                 
-                                <Label text="Delay Asymmetry:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <TextField fx:id="delayAsymmetryField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                <Label text="Ingress Latency:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="ingressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
                                           promptText="Nanoseconds (default: 0)"/>
                                 
-                                <Label text="Ingress Latency:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                <TextField fx:id="ingressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
-                                          promptText="Nanoseconds (default: 0)"/>
-                                
-                                <Label text="Egress Latency:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                <TextField fx:id="egressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="2" 
+                                <Label text="Egress Latency:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="egressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
                                           promptText="Nanoseconds (default: 0)"/>
                             </GridPane>
                         </VBox>
