@@ -1,0 +1,303 @@
+/* Main Container Styles */
+.main-container {
+    -fx-background-color: #f8f9fa;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.header {
+    -fx-padding: 0 0 20 0;
+}
+
+.header-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.content-container {
+    -fx-padding: 0;
+}
+
+/* Section Pane Styles */
+.section-pane {
+    -fx-background-color: white;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+}
+
+.section-pane .title {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 12;
+}
+
+.section-pane .content {
+    -fx-background-color: white;
+    -fx-padding: 15;
+}
+
+/* Form Controls */
+.text-field, .combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #007bff;
+    -fx-border-width: 2px;
+}
+
+.text-field:hover, .combo-box:hover {
+    -fx-border-color: #adb5bd;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #495057;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #6c757d;
+}
+
+/* Button Styles */
+.button {
+    -fx-background-radius: 6px;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-min-width: 100px;
+}
+
+.start-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+}
+
+.start-button:hover {
+    -fx-background-color: #218838;
+}
+
+.start-button:disabled {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: #adb5bd;
+}
+
+.stop-button {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+}
+
+.stop-button:hover {
+    -fx-background-color: #c82333;
+}
+
+.stop-button:disabled {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: #adb5bd;
+}
+
+.clear-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+}
+
+.clear-button:hover {
+    -fx-background-color: #5a6268;
+}
+
+/* Browse Button */
+#browseConfigButton {
+    -fx-background-color: #17a2b8;
+    -fx-text-fill: white;
+    -fx-min-width: 80px;
+    -fx-padding: 8 12;
+}
+
+#browseConfigButton:hover {
+    -fx-background-color: #138496;
+}
+
+/* SSH Connection Buttons */
+.connect-button {
+    -fx-background-color: #17a2b8;
+    -fx-text-fill: white;
+    -fx-min-width: 100px;
+}
+
+.connect-button:hover {
+    -fx-background-color: #138496;
+}
+
+.connect-button:disabled {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: #adb5bd;
+}
+
+.disconnect-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-min-width: 100px;
+}
+
+.disconnect-button:hover {
+    -fx-background-color: #5a6268;
+}
+
+.disconnect-button:disabled {
+    -fx-background-color: #adb5bd;
+    -fx-text-fill: #6c757d;
+}
+
+/* SSH Key Browse Button */
+#browseKeyButton {
+    -fx-background-color: #17a2b8;
+    -fx-text-fill: white;
+    -fx-min-width: 80px;
+    -fx-padding: 8 12;
+}
+
+#browseKeyButton:hover {
+    -fx-background-color: #138496;
+}
+
+#browseKeyButton:disabled {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: #adb5bd;
+}
+
+/* Connection Status Label */
+.connection-status {
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4px;
+}
+
+/* Password Field Styles */
+.password-field {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.password-field:focused {
+    -fx-border-color: #007bff;
+    -fx-border-width: 2px;
+}
+
+.password-field:hover {
+    -fx-border-color: #adb5bd;
+}
+
+/* CheckBox Styles */
+.check-box {
+    -fx-font-size: 14px;
+    -fx-text-fill: #495057;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #007bff;
+    -fx-border-color: #007bff;
+}
+
+.check-box .mark {
+    -fx-background-color: white;
+}
+
+/* Output Area */
+.output-area {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    -fx-font-size: 12px;
+    -fx-text-fill: #495057;
+}
+
+.output-area .content {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Control Buttons Container */
+.control-buttons {
+    -fx-padding: 20 0;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 20;
+}
+
+/* Label Styles */
+.label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #495057;
+}
+
+/* ScrollPane Styles */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: #f8f9fa;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #adb5bd;
+    -fx-background-radius: 4px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #6c757d;
+}
+
+/* TitledPane Arrow */
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 800px) {
+    .main-container {
+        -fx-padding: 10;
+    }
+    
+    .header-label {
+        -fx-font-size: 20px;
+    }
+    
+    .button {
+        -fx-min-width: 80px;
+        -fx-padding: 8 16;
+    }
+} 

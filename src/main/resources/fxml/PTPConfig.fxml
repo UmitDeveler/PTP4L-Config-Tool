@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.ptpapp.PTPConfigController" spacing="10" styleClass="main-container">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER" styleClass="header">
+        <Label text="PTP4L Configuration Tool" styleClass="header-label"/>
+    </HBox>
+
+    <!-- SSH Connection Section -->
+    <TitledPane text="Remote Connection (SSH)" expanded="true" styleClass="section-pane">
+        <VBox spacing="10">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <CheckBox fx:id="enableSSHCheck" text="Enable SSH Connection"/>
+                <Label fx:id="connectionStatusLabel" text="Local mode" styleClass="connection-status"/>
+            </HBox>
+            
+            <GridPane hgap="10" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="NEVER" minWidth="120" prefWidth="150"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="250"/>
+                    <ColumnConstraints hgrow="NEVER" minWidth="80" prefWidth="100"/>
+                </columnConstraints>
+                
+                <Label text="Hostname:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="sshHostField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                          promptText="e.g., 192.168.1.100"/>
+                <TextField fx:id="sshPortField" GridPane.columnIndex="2" GridPane.rowIndex="0" 
+                          promptText="Port" text="22"/>
+                
+                <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="sshUsernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                          promptText="SSH username"/>
+                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                
+                <Label text="Authentication:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <CheckBox fx:id="useSSHKeyCheck" text="Use SSH Key" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                
+                <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <PasswordField fx:id="sshPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="3" 
+                              promptText="SSH password"/>
+                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                
+                <Label text="SSH Key:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField fx:id="sshKeyPathField" GridPane.columnIndex="1" GridPane.rowIndex="4" 
+                          promptText="Path to private key"/>
+                <Button fx:id="browseKeyButton" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                
+                <Label text="Key Passphrase:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <PasswordField fx:id="sshKeyPassphraseField" GridPane.columnIndex="1" GridPane.rowIndex="5" 
+                              promptText="Key passphrase (optional)"/>
+                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                
+                <Label text="Remote Config Path:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <TextField fx:id="remoteConfigPathField" GridPane.columnIndex="1" GridPane.rowIndex="6" 
+                          promptText="e.g., /etc/ptp4l.conf"/>
+                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+            </GridPane>
+            
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="connectSSHButton" text="Connect" styleClass="connect-button"/>
+                <Button fx:id="disconnectSSHButton" text="Disconnect" styleClass="disconnect-button"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <!-- Configuration Tabs -->
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+        
+        <!-- Global Options Tab -->
+        <Tab text="Global Options">
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="15" styleClass="content-container">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    
+                    <!-- Clock Configuration -->
+                    <TitledPane text="Clock Configuration" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <GridPane hgap="10" vgap="8">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+                                </columnConstraints>
+                                
+                                <Label text="Clock Type:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <ComboBox fx:id="clockTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                         promptText="Select clock type" maxWidth="Infinity"/>
+                                
+                                <Label text="Domain Number:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="domainNumberField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                                          promptText="0-255 (default: 0)"/>
+                                
+                                <Label text="Priority 1:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <TextField fx:id="priority1Field" GridPane.columnIndex="1" GridPane.rowIndex="2" 
+                                          promptText="0-255 (default: 128)"/>
+                                
+                                <Label text="Priority 2:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                <TextField fx:id="priority2Field" GridPane.columnIndex="1" GridPane.rowIndex="3" 
+                                          promptText="0-255 (default: 128)"/>
+                                
+                                <Label text="Clock Class:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                                <TextField fx:id="clockClassField" GridPane.columnIndex="1" GridPane.rowIndex="4" 
+                                          promptText="0-255 (default: 248)"/>
+                                
+                                <Label text="Clock Accuracy:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                                <TextField fx:id="clockAccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="5" 
+                                          promptText="Hex value (default: 0xFE)"/>
+                            </GridPane>
+                        </VBox>
+                    </TitledPane>
+                    
+                    <!-- Servo Configuration -->
+                    <TitledPane text="Servo Configuration" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <GridPane hgap="10" vgap="8">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+                                </columnConstraints>
+                                
+                                <Label text="Clock Servo:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <ComboBox fx:id="clockServoCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                         promptText="Select servo type" maxWidth="Infinity"/>
+                                
+                                <Label text="Step Threshold:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="stepThresholdField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                                          promptText="Seconds (default: 0.0)"/>
+                                
+                                <Label text="First Step Threshold:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <TextField fx:id="firstStepThresholdField" GridPane.columnIndex="1" GridPane.rowIndex="2" 
+                                          promptText="Seconds (default: 0.00002)"/>
+                                
+                                <Label text="Max Frequency:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                <TextField fx:id="maxFrequencyField" GridPane.columnIndex="1" GridPane.rowIndex="3" 
+                                          promptText="PPB (default: 900000000)"/>
+                            </GridPane>
+                        </VBox>
+                    </TitledPane>
+                    
+                    <!-- Global Flags -->
+                    <TitledPane text="Global Flags" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <HBox spacing="20">
+                                <CheckBox fx:id="clientOnlyCheck" text="Client Only"/>
+                                <CheckBox fx:id="twoStepFlagCheck" text="Two Step Flag"/>
+                                <CheckBox fx:id="freeRunningCheck" text="Free Running"/>
+                            </HBox>
+                            <HBox spacing="20">
+                                <CheckBox fx:id="assumeTwoStepCheck" text="Assume Two Step"/>
+                                <CheckBox fx:id="kernelLeapCheck" text="Kernel Leap"/>
+                                <CheckBox fx:id="useSyslogCheck" text="Use Syslog"/>
+                            </HBox>
+                        </VBox>
+                    </TitledPane>
+                </VBox>
+            </ScrollPane>
+        </Tab>
+        
+        <!-- Port Options Tab -->
+        <Tab text="Port Options">
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="15" styleClass="content-container">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    
+                    <!-- Network Transport -->
+                    <TitledPane text="Network Transport" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <GridPane hgap="10" vgap="8">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+                                </columnConstraints>
+                                
+                                <Label text="Network Transport:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <ComboBox fx:id="networkTransportCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                         promptText="Select transport" maxWidth="Infinity"/>
+                                
+                                <Label text="Time Stamping:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <ComboBox fx:id="timeStampingCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                                         promptText="Select time stamping" maxWidth="Infinity"/>
+                                
+                                <Label text="Delay Mechanism:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <ComboBox fx:id="delayMechanismCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" 
+                                         promptText="Select delay mechanism" maxWidth="Infinity"/>
+                            </GridPane>
+                        </VBox>
+                    </TitledPane>
+                    
+                    <!-- Timing Intervals -->
+                    <TitledPane text="Timing Intervals" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <GridPane hgap="10" vgap="8">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+                                </columnConstraints>
+                                
+                                <Label text="Log Sync Interval:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="logSyncIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+                                
+                                <Label text="Log Announce Interval:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="logAnnounceIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                                          promptText="Power of 2 in seconds (default: 1)"/>
+                                
+                                <Label text="Log Min Delay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <TextField fx:id="logMinDelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="2" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+                                
+                                <Label text="Log Min Pdelay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                <TextField fx:id="logMinPdelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="3" 
+                                          promptText="Power of 2 in seconds (default: 0)"/>
+                            </GridPane>
+                        </VBox>
+                    </TitledPane>
+                    
+                    <!-- Port Delays -->
+                    <TitledPane text="Port Delays and Latencies" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <GridPane hgap="10" vgap="8">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+                                </columnConstraints>
+                                
+                                <Label text="Delay Asymmetry:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="delayAsymmetryField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                          promptText="Nanoseconds (default: 0)"/>
+                                
+                                <Label text="Ingress Latency:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="ingressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                                          promptText="Nanoseconds (default: 0)"/>
+                                
+                                <Label text="Egress Latency:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <TextField fx:id="egressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="2" 
+                                          promptText="Nanoseconds (default: 0)"/>
+                            </GridPane>
+                        </VBox>
+                    </TitledPane>
+                </VBox>
+            </ScrollPane>
+        </Tab>
+        
+        <!-- Interface & Execution Tab -->
+        <Tab text="Interface &amp; Execution">
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="15" styleClass="content-container">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    
+                    <!-- Interface Configuration -->
+                    <TitledPane text="Interface Configuration" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <GridPane hgap="10" vgap="8">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+                                </columnConstraints>
+                                
+                                <Label text="Interface Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="interfaceNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                          promptText="e.g., eth0, enp0s3"/>
+                            </GridPane>
+                        </VBox>
+                    </TitledPane>
+                    
+                    <!-- Master/Slave Configuration -->
+                    <TitledPane text="Master/Slave Configuration" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <CheckBox fx:id="masterModeCheck" text="Master Mode (checked: -m only, unchecked: -m -s)"/>
+                            <Label text="Note: When checked, runs as master (-m). When unchecked, runs as slave (-m -s)." 
+                                   style="-fx-font-style: italic; -fx-text-fill: #666666;"/>
+                        </VBox>
+                    </TitledPane>
+                    
+                    <!-- Execution Options -->
+                    <TitledPane text="Execution Options" expanded="true" styleClass="section-pane">
+                        <VBox spacing="10">
+                            <HBox spacing="20">
+                                <CheckBox fx:id="useSudoCheck" text="Use Sudo"/>
+                                <CheckBox fx:id="verboseCheck" text="Verbose (-v)"/>
+                                <CheckBox fx:id="quietCheck" text="Quiet (-q)"/>
+                            </HBox>
+                            <GridPane hgap="10" vgap="8">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+                                </columnConstraints>
+                                
+                                <Label text="Print Level:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="printLevelField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                                          promptText="0-6 (default: 6)"/>
+                            </GridPane>
+                        </VBox>
+                    </TitledPane>
+                </VBox>
+            </ScrollPane>
+        </Tab>
+        
+    </TabPane>
+
+    <!-- Save Configuration and Control Buttons -->
+    <HBox spacing="10" alignment="CENTER" styleClass="control-buttons">
+        <Button fx:id="saveConfigButton" text="Save &amp; Upload Config" styleClass="save-button"/>
+        <Button fx:id="startButton" text="Start PTP4L" styleClass="start-button"/>
+        <Button fx:id="stopButton" text="Stop PTP4L" styleClass="stop-button"/>
+        <Button fx:id="clearButton" text="Clear Output" styleClass="clear-button"/>
+    </HBox>
+
+    <!-- Output Section -->
+    <TitledPane text="Output" expanded="true" styleClass="section-pane">
+        <VBox spacing="5">
+            <TextArea fx:id="outputArea" promptText="PTP4L output will appear here..."
+                      VBox.vgrow="ALWAYS" styleClass="output-area" prefRowCount="10"/>
+        </VBox>
+    </TitledPane>
+
+</VBox> 
