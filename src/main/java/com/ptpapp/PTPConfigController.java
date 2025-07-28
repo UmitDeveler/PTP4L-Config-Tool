@@ -210,7 +210,7 @@ public class PTPConfigController {
         power_profile_2011_grandmasterTimeInaccuracy.setText("-1");
         power_profile_2011_networkTimeInaccuracy.setText("-1");
         power_profile_2017_totalTimeInaccuracy.setText("-1");
-        power_profile.grandmasterID.setText("0");
+        power_profile_grandmasterID.setText("0");
         power_profile_version.setText("none");
         ptp_minor_version.setText("1");
         spp.setText("-1");
