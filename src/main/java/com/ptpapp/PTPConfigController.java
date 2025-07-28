@@ -62,14 +62,37 @@ public class PTPConfigController {
     @FXML private ComboBox<String> timeStampingCombo;
     @FXML private ComboBox<String> delayMechanismCombo;
 
-    // Port Options - Timing Intervals
-    @FXML private TextField logSyncIntervalField;
+    // Port Options
     @FXML private TextField logAnnounceIntervalField;
+    @FXML private TextField logSyncIntervalField;
+    @FXML private TextField operLogSyncInterval;
     @FXML private TextField logMinDelayReqIntervalField;
     @FXML private TextField logMinPdelayReqIntervalField;
-
-    // Port Options - Delays and Latencies
+    @FXML private TextField operLogPdelayReqInterval;
+    @FXML private TextField announceReceiptTimeout;
+    @FXML private TextField syncReceiptTimeout;
+    @FXML private TextField delay_response_timeout;
     @FXML private TextField delayAsymmetryField;
+    @FXML private TextField fault_reset_interval;
+    @FXML private TextField neighborPropDelayThresh;
+    @FXML private TextField serverOnly;
+    @FXML private TextField G_8275_portDS_localPriority;
+    @FXML private TextField allowedLostResponses;
+    @FXML private TextField asCapable;	
+    @FXML private TextField BMCA;
+    @FXML private TextField inhibit_announce;
+    @FXML private TextField inhibit_delay_req;
+    @FXML private TextField ignore_source_id;
+    @FXML private TextField power_profile_2011_grandmasterTimeInaccuracy;
+    @FXML private TextField power_profile_2011_networkTimeInaccuracy;
+    @FXML private TextField power_profile_2017_totalTimeInaccuracy;
+    @FXML private TextField power_profile_grandmasterID;
+    @FXML private TextField power_profile_version;
+    @FXML private TextField ptp_minor_version;
+    @FXML private TextField spp;
+    @FXML private TextField active_key_id;
+
+
     @FXML private TextField ingressLatencyField;
     @FXML private TextField egressLatencyField;
 
@@ -161,13 +184,39 @@ public class PTPConfigController {
         stepThresholdField.setText("0.0");
         firstStepThresholdField.setText("0.00002");
         maxFrequencyField.setText("900000000");
-        
-        logSyncIntervalField.setText("0");
+
+        // Default Port Options
+
         logAnnounceIntervalField.setText("1");
+        logSyncIntervalField.setText("0");
+        operLogSyncInterval.setText("0");
         logMinDelayReqIntervalField.setText("0");
         logMinPdelayReqIntervalField.setText("0");
-        
+        operLogPdelayReqInterval.setText("0");
+        announceReceiptTimeout.setText("3");
+        syncReceiptTimeout.setText("0");
+        delay_response_timeout.setText("0");
         delayAsymmetryField.setText("0");
+        fault_reset_interval.setText("4");
+        neighborPropDelayThresh.setText("200000000");
+        serverOnly.setText("0");
+        G_8275_portDS_localPriority.setText("128");
+        allowedLostResponses.setText("3");
+        asCapable.setText("auto");
+        BMCA.setText("ptp");
+        inhibit_announce.setText("0");
+        inhibit_delay_req.setText("0");
+        ignore_source_id.setText("0");
+        power_profile_2011_grandmasterTimeInaccuracy.setText("-1");
+        power_profile_2011_networkTimeInaccuracy.setText("-1");
+        power_profile_2017_totalTimeInaccuracy.setText("-1");
+        power_profile.grandmasterID.setText("0");
+        power_profile_version.setText("none");
+        ptp_minor_version.setText("1");
+        spp.setText("-1");
+        active_key_id.setText("0");
+
+        
         ingressLatencyField.setText("0");
         egressLatencyField.setText("0");
         
@@ -537,13 +586,40 @@ public class PTPConfigController {
         configProperties.setProperty("step_threshold", stepThresholdField.getText().trim());
         configProperties.setProperty("first_step_threshold", firstStepThresholdField.getText().trim());
         configProperties.setProperty("max_frequency", maxFrequencyField.getText().trim());
-        
-        configProperties.setProperty("logSyncInterval", logSyncIntervalField.getText().trim());
+
+        // Port Options
         configProperties.setProperty("logAnnounceInterval", logAnnounceIntervalField.getText().trim());
+        configProperties.setProperty("logSyncInterval", logSyncIntervalField.getText().trim());
+        configProperties.setProperty("operLogSyncInterval", operLogSyncInterval.getText().trim());
         configProperties.setProperty("logMinDelayReqInterval", logMinDelayReqIntervalField.getText().trim());
         configProperties.setProperty("logMinPdelayReqInterval", logMinPdelayReqIntervalField.getText().trim());
+        configProperties.setProperty("operLogPdelayReqInterval", operLogPdelayReqInterval.getText().trim());
+        configProperties.setProperty("announceReceiptTimeout", announceReceiptTimeout.getText().trim());
+        configProperties.setProperty("syncReceiptTimeout", syncReceiptTimeout.getText().trim());
+        configProperties.setProperty("delay_response_timeout", delay_response_timeout.getText().trim());
+        configProperties.setProperty("delayAsymmetry", delayAsymmetry.getText().trim());
+        configProperties.setProperty("fault_reset_interval", fault_reset_interval.getText().trim());
+        configProperties.setProperty("neighborPropDelayThresh", neighborPropDelayThresh.getText().trim());
+        configProperties.setProperty("serverOnly", serverOnly.getText().trim());
+        configProperties.setProperty("G.8275.portDS.localPriority", G_8275_portDS_localPriority.getText().trim());
+        configProperties.setProperty("allowedLostResponses", allowedLostResponses.getText().trim());
+        configProperties.setProperty("asCapable", asCapable.getText().trim());
+        configProperties.setProperty("BMCA", BMCA.getText().trim());
+        configProperties.setProperty("inhibit_announce", inhibit_announce.getText().trim());
+        configProperties.setProperty("inhibit_delay_req", inhibit_delay_req.getText().trim());
+        configProperties.setProperty("ignore_source_id", ignore_source_id.getText().trim());
+        configProperties.setProperty("power_profile.2011.grandmasterTimeInaccuracy", power_profile_2011_grandmasterTimeInaccuracy.getText().trim());
+        configProperties.setProperty("power_profile.2011.networkTimeInaccuracy", power_profile_2011_networkTimeInaccuracy.getText().trim());
+        configProperties.setProperty("power_profile.2017.totalTimeInaccuracy", power_profile_2017_totalTimeInaccuracy.getText().trim());
+        configProperties.setProperty("power_profile.grandmasterID", power_profile_grandmasterID.getText().trim());
+        configProperties.setProperty("power_profile.version", power_profile_version.getText().trim());
+        configProperties.setProperty("ptp_minor_version", ptp_minor_version.getText().trim());
+        configProperties.setProperty("spp", spp.getText().trim());
+        configProperties.setProperty("active_key_id", active_key_id.getText().trim());
+
+
         
-        configProperties.setProperty("delayAsymmetry", delayAsymmetryField.getText().trim());
+        
         configProperties.setProperty("ingressLatency", ingressLatencyField.getText().trim());
         configProperties.setProperty("egressLatency", egressLatencyField.getText().trim());
         
