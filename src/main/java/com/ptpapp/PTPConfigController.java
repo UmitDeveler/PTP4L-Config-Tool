@@ -35,72 +35,113 @@ public class PTPConfigController {
     @FXML private Label connectionStatusLabel;
     @FXML private CheckBox enableSSHCheck;
 
-    // Global Options - Clock Configuration
-    @FXML private ComboBox<String> clockTypeCombo;
-    @FXML private TextField domainNumberField;
-    @FXML private TextField priority1Field;
+    // Default Data Set
+	@FXML private CheckBox clientOnlyCheck;
+	@FXML private TextField clockAccuracyField;
+	@FXML private TextField clockClassField;
+	@FXML private ComboBox<String> dataset_comparisonCombo;
+	@FXML private TextField domainNumberField;
+	@FXML private TextField dscp_eventField;
+	@FXML private TextField dscp_generalField;
+	@FXML private CheckBox free_runningCheck;
+	@FXML private TextField freq_est_intervalField;
+	@FXML private TextField G_8275_defaultDS_localPriorityField;
+	@FXML private TextField maxStepsRemovedField;
+	@FXML private TextField offsetScaledLogVarianceField;
+	@FXML private TextField priority1Field;
     @FXML private TextField priority2Field;
-    @FXML private TextField clockClassField;
-    @FXML private TextField clockAccuracyField;
+	@FXML private TextField socket_priorityField;
+	@FXML private CheckBox twoStepFlagCheck;
+	@FXML private TextField utc_offsetField;
 
-    // Global Options - Servo Configuration
-    @FXML private ComboBox<String> clockServoCombo;
-    @FXML private TextField stepThresholdField;
-    @FXML private TextField firstStepThresholdField;
-    @FXML private TextField maxFrequencyField;
-
-    // Global Options - Flags
-    @FXML private CheckBox clientOnlyCheck;
-    @FXML private CheckBox twoStepFlagCheck;
-    @FXML private CheckBox freeRunningCheck;
-    @FXML private CheckBox assumeTwoStepCheck;
-    @FXML private CheckBox kernelLeapCheck;
-    @FXML private CheckBox useSyslogCheck;
-
-    // Port Options - Network Transport
-    @FXML private ComboBox<String> networkTransportCombo;
-    @FXML private ComboBox<String> timeStampingCombo;
-    @FXML private ComboBox<String> delayMechanismCombo;
-
+    // Interface Options
+    @FXML private ComboBox<String> clockTypeCombo;
+	@FXML private ComboBox<String> networkTransportCombo;
+	@FXML private ComboBox<String> delayMechanismCombo;
+	@FXML private ComboBox<String> timeStampingCombo;
+	@FXML private ComboBox<String> tsproc_modeCombo;
+	@FXML private ComboBox<String> delay_filterCombo;
+	@FXML private TextField delay_filter_lengthField;
+	@FXML private TextField ingressLatencyField;
+    @FXML private TextField egressLatencyField;
+	@FXML private TextField boundary_clock_jbodField;
+    @FXML private TextField phc_indexField;
+  
     // Port Options
     @FXML private TextField logAnnounceIntervalField;
     @FXML private TextField logSyncIntervalField;
-    @FXML private TextField operLogSyncInterval;
+    @FXML private TextField operLogSyncIntervalField;
     @FXML private TextField logMinDelayReqIntervalField;
     @FXML private TextField logMinPdelayReqIntervalField;
-    @FXML private TextField operLogPdelayReqInterval;
-    @FXML private TextField announceReceiptTimeout;
-    @FXML private TextField syncReceiptTimeout;
-    @FXML private TextField delay_response_timeout;
+    @FXML private TextField operLogPdelayReqIntervalField;
+    @FXML private TextField announceReceiptTimeoutField;
+    @FXML private TextField syncReceiptTimeoutField;
+    @FXML private TextField delay_response_timeoutField;
     @FXML private TextField delayAsymmetryField;
-    @FXML private TextField fault_reset_interval;
-    @FXML private TextField neighborPropDelayThresh;
-    @FXML private TextField serverOnly;
-    @FXML private TextField G_8275_portDS_localPriority;
-    @FXML private TextField allowedLostResponses;
-    @FXML private TextField asCapable;	
-    @FXML private TextField BMCA;
-    @FXML private TextField inhibit_announce;
-    @FXML private TextField inhibit_delay_req;
-    @FXML private TextField ignore_source_id;
-    @FXML private TextField power_profile_2011_grandmasterTimeInaccuracy;
-    @FXML private TextField power_profile_2011_networkTimeInaccuracy;
-    @FXML private TextField power_profile_2017_totalTimeInaccuracy;
-    @FXML private TextField power_profile_grandmasterID;
-    @FXML private TextField power_profile_version;
-    @FXML private TextField ptp_minor_version;
-    @FXML private TextField spp;
-    @FXML private TextField active_key_id;
+    @FXML private TextField fault_reset_intervalField;
+    @FXML private TextField neighborPropDelayThreshField;
+    @FXML private CheckBox serverOnlyCheck;
+    @FXML private TextField G_8275_portDS_localPriorityField;
+    @FXML private TextField allowedLostResponsesField;
+    @FXML private ComboBox<String> asCapableCombo;
+	@FXML private ComboBox<String> BMCACombo;
+    @FXML private CheckBox inhibit_announceCheck;
+    @FXML private CheckBox inhibit_delay_reqCheck;
+    @FXML private CheckBox ignore_source_idCheck;
+    @FXML private TextField power_profile_2011_grandmasterTimeInaccuracyField;
+    @FXML private TextField power_profile_2011_networkTimeInaccuracyField;
+    @FXML private TextField power_profile_2017_totalTimeInaccuracyField;
+    @FXML private TextField power_profile_grandmasterIDField;
+    @FXML private TextField power_profile_versionField;
+    @FXML private TextField ptp_minor_versionField;
+    @FXML private TextField sppField;
+    @FXML private TextField active_key_idField;
 
-
-    @FXML private TextField ingressLatencyField;
-    @FXML private TextField egressLatencyField;
-
-    // Interface & Execution
+	// Runtime Options
+	@FXML private CheckBox assume_two_stepCheck;
+	@FXML private CheckBox check_fup_syncCheck;
+	@FXML private TextField clock_class_thresholdField;
+	@FXML private CheckBox follow_up_infoCheck;
+	@FXML private CheckBox hybrid_e2eCheck;
+	@FXML private CheckBox inhibit_multicast_serviceCheck;
+	@FXML private CheckBox kernel_leapCheck;
+	@FXML private TextField logging_levelField;
+	@FXML private CheckBox net_sync_monitorCheck;
+	@FXML private CheckBox path_trace_enabledCheck;
+	@FXML private TextField summary_intervalField;
+	@FXML private CheckBox tc_spanning_treeCheck;
+	@FXML private TextField tx_timestamp_timeoutField;
+	@FXML private CheckBox unicast_listenCheck;
+	@FXML private TextField unicast_master_tableField;
+	@FXML private TextField unicast_req_durationField;
+	@FXML private CheckBox use_syslogCheck;
+	@FXML private CheckBox verboseCheck;
+		
+    // Servo Configuration
+    @FXML private ComboBox<String> clock_servoCombo;
+	@FXML private TextField first_step_thresholdField;
+	@FXML private TextField max_frequencyField;
+	@FXML private CheckBox msg_interval_requestCheck;
+	@FXML private TextField ntpshm_segmentField;
+	@FXML private TextField pi_integral_constField;
+	@FXML private TextField pi_integral_exponentField;
+	@FXML private TextField pi_integral_norm_maxField;
+	@FXML private TextField pi_integral_scaleField;
+	@FXML private TextField pi_proportional_constField;
+	@FXML private TextField pi_proportional_exponentField;
+	@FXML private TextField pi_proportional_norm_maxField;
+	@FXML private TextField pi_proportional_scaleField;
+	@FXML private TextField sanity_freq_limitField;
+	@FXML private TextField servo_num_offset_valuesField;
+	@FXML private TextField servo_offset_thresholdField;
+	@FXML private TextField step_thresholdField;
+	@FXML private CheckBox write_phase_modeCheck;
+    
+	
+    // Execution
     @FXML private TextField interfaceNameField;
     @FXML private CheckBox masterModeCheck;
     @FXML private CheckBox useSudoCheck;
-    @FXML private CheckBox verboseCheck;
     @FXML private CheckBox quietCheck;
     @FXML private TextField printLevelField;
 
@@ -126,34 +167,66 @@ public class PTPConfigController {
         setupSSH();
     }
 
+
     private void setupComboBoxes() {
         // Clock Type options
         clockTypeCombo.setItems(FXCollections.observableArrayList(
             "OC (Ordinary Clock)", "BC (Boundary Clock)", "P2P_TC (P2P Transparent)", "E2E_TC (E2E Transparent)"
         ));
         clockTypeCombo.setValue("OC (Ordinary Clock)");
-
-        // Clock Servo options
-        clockServoCombo.setItems(FXCollections.observableArrayList(
-            "pi", "linreg", "ntpshm", "refclock_sock", "nullf"
-        ));
-        clockServoCombo.setValue("pi");
-
-        // Network Transport options
-        networkTransportCombo.setItems(FXCollections.observableArrayList("UDPv4", "UDPv6", "L2"));
+		
+		// Network Transport options
+        networkTransportCombo.setItems(FXCollections.observableArrayList(
+		"UDPv4", "UDPv6", "L2"
+		));
         networkTransportCombo.setValue("UDPv4");
-
-        // Time Stamping options
-        timeStampingCombo.setItems(FXCollections.observableArrayList(
-            "hardware", "software", "legacy", "onestep", "p2p1step"
-        ));
-        timeStampingCombo.setValue("hardware");
-
-        // Delay Mechanism options
+		
+		// Delay Mechanism options
         delayMechanismCombo.setItems(FXCollections.observableArrayList(
             "E2E", "P2P", "Auto", "NONE"
         ));
         delayMechanismCombo.setValue("E2E");
+		
+		// Time Stamping options
+        timeStampingCombo.setItems(FXCollections.observableArrayList(
+            "hardware", "software", "legacy", "onestep", "p2p1step"
+        ));
+        timeStampingCombo.setValue("hardware");
+		
+		// Time Stamping Processing Mode options
+        tsproc_modeCombo.setItems(FXCollections.observableArrayList(
+            "filter", "raw", "filter_weight", "raw_weight"
+        ));
+        tsproc_modeCombo.setValue("filter");
+		
+		// Delay Filter options
+        delay_filterCombo.setItems(FXCollections.observableArrayList(
+            "moving_avarage", "moving_median"
+        ));
+        delay_filterCombo.setValue("moving_median");
+		
+        // Clock Servo options
+        clock_servoCombo.setItems(FXCollections.observableArrayList(
+            "pi", "linreg", "ntpshm", "refclock_sock", "nullf"
+        ));
+        clock_servoCombo.setValue("pi");
+
+     
+		BMCACombo.setItems(FXCollections.observableArrayList(
+            "noop", "ptp"
+        ));
+        BMCACombo.setValue("ptp");
+		
+		asCapableCombo.setItems(FXCollections.observableArrayList(
+            "true", "auto"
+        ));
+        asCapableCombo.setValue("auto");
+		
+		dataset_comparisonCombo.setItems(FXCollections.observableArrayList(
+            "ieee1588", "G.8275.x"
+        ));
+        dataset_comparisonCombo.setValue("ieee1588");
+		
     }
 
     private void setupButtons() {
@@ -173,53 +246,104 @@ public class PTPConfigController {
         outputArea.setWrapText(true);
     }
 
+	
     private void loadDefaultValues() {
-        // Default values based on ptp4l manual
-        domainNumberField.setText("0");
-        priority1Field.setText("128");
+		
+		// 
+		sshHostField.setText("192.168.7.2");
+		sshUsernameField.setText("debian");
+		sshPasswordField.setText("temppwd");
+		// Defaul Data Set
+		socket_priorityField.setText("0");
+		priority1Field.setText("128");
         priority2Field.setText("128");
-        clockClassField.setText("248");
+		domainNumberField.setText("0");
+		clockClassField.setText("248");
         clockAccuracyField.setText("0xFE");
-        
-        stepThresholdField.setText("0.0");
-        firstStepThresholdField.setText("0.00002");
-        maxFrequencyField.setText("900000000");
+		offsetScaledLogVarianceField.setText("0xFFFF");
+		freq_est_intervalField.setText("1");
+		dscp_eventField.setText("0");
+		dscp_generalField.setText("0");
+		G_8275_defaultDS_localPriorityField.setText("128");
+		maxStepsRemovedField.setText("255");
+		utc_offsetField.setText("37");
+		
+		// Interface Options
+		delay_filter_lengthField.setText("10");
+		ingressLatencyField.setText("0");
+		egressLatencyField.setText("0");
+		boundary_clock_jbodField.setText("0");
+		phc_indexField.setText("-1");
 
         // Default Port Options
-
         logAnnounceIntervalField.setText("1");
         logSyncIntervalField.setText("0");
-        operLogSyncInterval.setText("0");
+        operLogSyncIntervalField.setText("0");
         logMinDelayReqIntervalField.setText("0");
         logMinPdelayReqIntervalField.setText("0");
-        operLogPdelayReqInterval.setText("0");
-        announceReceiptTimeout.setText("3");
-        syncReceiptTimeout.setText("0");
-        delay_response_timeout.setText("0");
+        operLogPdelayReqIntervalField.setText("0");
+        announceReceiptTimeoutField.setText("3");
+        syncReceiptTimeoutField.setText("0");
+        delay_response_timeoutField.setText("0");
         delayAsymmetryField.setText("0");
-        fault_reset_interval.setText("4");
-        neighborPropDelayThresh.setText("200000000");
-        serverOnly.setText("0");
-        G_8275_portDS_localPriority.setText("128");
-        allowedLostResponses.setText("3");
-        asCapable.setText("auto");
-        BMCA.setText("ptp");
-        inhibit_announce.setText("0");
-        inhibit_delay_req.setText("0");
-        ignore_source_id.setText("0");
-        power_profile_2011_grandmasterTimeInaccuracy.setText("-1");
-        power_profile_2011_networkTimeInaccuracy.setText("-1");
-        power_profile_2017_totalTimeInaccuracy.setText("-1");
-        power_profile_grandmasterID.setText("0");
-        power_profile_version.setText("none");
-        ptp_minor_version.setText("1");
-        spp.setText("-1");
-        active_key_id.setText("0");
+        fault_reset_intervalField.setText("4");
+        neighborPropDelayThreshField.setText("200000000");
+        serverOnlyCheck.setSelected(false);
+        G_8275_portDS_localPriorityField.setText("128");
+        allowedLostResponsesField.setText("3");
+        inhibit_announceCheck.setSelected(false);
+        inhibit_delay_reqCheck.setSelected(false);
+        ignore_source_idCheck.setSelected(false);
+        power_profile_2011_grandmasterTimeInaccuracyField.setText("-1");
+        power_profile_2011_networkTimeInaccuracyField.setText("-1");
+        power_profile_2017_totalTimeInaccuracyField.setText("-1");
+        power_profile_grandmasterIDField.setText("0");
+        power_profile_versionField.setText("none");
+        ptp_minor_versionField.setText("1");
+        sppField.setText("-1");
+        active_key_idField.setText("0");
+		
 
-        
-        ingressLatencyField.setText("0");
-        egressLatencyField.setText("0");
-        
+		// Runtime Options
+		assume_two_stepCheck.setSelected(false);
+		check_fup_syncCheck.setSelected(false);
+		clock_class_thresholdField.setText("248");
+		follow_up_infoCheck.setSelected(false);
+		hybrid_e2eCheck.setSelected(false);
+		inhibit_multicast_serviceCheck.setSelected(false);
+		kernel_leapCheck.setSelected(true);
+		logging_levelField.setText("6");
+		net_sync_monitorCheck.setSelected(false);
+		path_trace_enabledCheck.setSelected(false);
+		summary_intervalField.setText("0");
+		tc_spanning_treeCheck.setSelected(false);
+		tx_timestamp_timeoutField.setText("10");
+		unicast_listenCheck.setSelected(false);
+		unicast_master_tableField.setText("0");
+		unicast_req_durationField.setText("3600");
+		use_syslogCheck.setSelected(true);
+		verboseCheck.setSelected(false);
+		
+		
+		// Servo Options
+		first_step_thresholdField.setText("0.00002");
+		max_frequencyField.setText("900000000");
+		msg_interval_requestCheck.setSelected(false);
+		ntpshm_segmentField.setText("0");
+		pi_integral_constField.setText("0.0");
+		pi_integral_exponentField.setText("0.4");
+		pi_integral_norm_maxField.setText("0.3");
+		pi_integral_scaleField.setText("0.0");
+		pi_proportional_constField.setText("0.0");
+		pi_proportional_exponentField.setText("-0.3");
+		pi_proportional_norm_maxField.setText("0.7");
+		pi_proportional_scaleField.setText("0.0");
+		sanity_freq_limitField.setText("200000000");
+		servo_num_offset_valuesField.setText("10");
+		servo_offset_thresholdField.setText("0");
+		step_thresholdField.setText("0.0");
+		write_phase_modeCheck.setSelected(false);
+		
         interfaceNameField.setText("eth0");
         printLevelField.setText("6");
         
@@ -229,8 +353,8 @@ public class PTPConfigController {
         // Default flags
         useSudoCheck.setSelected(true);
         twoStepFlagCheck.setSelected(true);
-        kernelLeapCheck.setSelected(true);
-        useSyslogCheck.setSelected(true);
+		clientOnlyCheck.setSelected(false);
+		free_runningCheck.setSelected(false);
     }
     
     private void setupSSH() {
@@ -571,58 +695,103 @@ public class PTPConfigController {
 
     private void updateConfigFromUI() {
         outputArea.appendText("🔧 Updating config from UI fields...\n");
-        
-        // Update configuration properties from UI
-        configProperties.setProperty("domainNumber", domainNumberField.getText().trim());
-        configProperties.setProperty("priority1", priority1Field.getText().trim());
+		
+		// Default Data Set
+		configProperties.setProperty("socket_priority", socket_priorityField.getText().trim());
+		configProperties.setProperty("priority1", priority1Field.getText().trim());
         configProperties.setProperty("priority2", priority2Field.getText().trim());
-        configProperties.setProperty("clockClass", clockClassField.getText().trim());
+		configProperties.setProperty("domainNumber", domainNumberField.getText().trim());
+		configProperties.setProperty("clockClass", clockClassField.getText().trim());
         configProperties.setProperty("clockAccuracy", clockAccuracyField.getText().trim());
+		configProperties.setProperty("offsetScaledLogVariance", offsetScaledLogVarianceField.getText().trim());
+		configProperties.setProperty("freq_est_interval", freq_est_intervalField.getText().trim());
+		configProperties.setProperty("dscp_event", dscp_eventField.getText().trim());
+		configProperties.setProperty("dscp_general", dscp_generalField.getText().trim());
+		configProperties.setProperty("G.8275.defaultDS.localPriority", G_8275_defaultDS_localPriorityField.getText().trim());
+		configProperties.setProperty("maxStepsRemoved", maxStepsRemovedField.getText().trim());
+		configProperties.setProperty("utc_offset", utc_offsetField.getText().trim());
         
+		
+		// Update configuration properties from UI
+ 
         outputArea.appendText("📝 Basic config: domain=" + domainNumberField.getText().trim() + 
                             ", priority1=" + priority1Field.getText().trim() + 
                             ", priority2=" + priority2Field.getText().trim() + "\n");
-        
-        configProperties.setProperty("step_threshold", stepThresholdField.getText().trim());
-        configProperties.setProperty("first_step_threshold", firstStepThresholdField.getText().trim());
-        configProperties.setProperty("max_frequency", maxFrequencyField.getText().trim());
 
+		// Interface Options
+		configProperties.setProperty("delay_filter_length", delay_filter_lengthField.getText().trim());
+		configProperties.setProperty("ingressLatency", ingressLatencyField.getText().trim());
+		configProperties.setProperty("egressLatency", egressLatencyField.getText().trim());
+		configProperties.setProperty("boundary_clock_jbod", boundary_clock_jbodField.getText().trim());
+        configProperties.setProperty("phc_index", phc_indexField.getText().trim());
+		
         // Port Options
         configProperties.setProperty("logAnnounceInterval", logAnnounceIntervalField.getText().trim());
         configProperties.setProperty("logSyncInterval", logSyncIntervalField.getText().trim());
-        configProperties.setProperty("operLogSyncInterval", operLogSyncInterval.getText().trim());
+        configProperties.setProperty("operLogSyncInterval", operLogSyncIntervalField.getText().trim());
         configProperties.setProperty("logMinDelayReqInterval", logMinDelayReqIntervalField.getText().trim());
         configProperties.setProperty("logMinPdelayReqInterval", logMinPdelayReqIntervalField.getText().trim());
-        configProperties.setProperty("operLogPdelayReqInterval", operLogPdelayReqInterval.getText().trim());
-        configProperties.setProperty("announceReceiptTimeout", announceReceiptTimeout.getText().trim());
-        configProperties.setProperty("syncReceiptTimeout", syncReceiptTimeout.getText().trim());
-        configProperties.setProperty("delay_response_timeout", delay_response_timeout.getText().trim());
-        configProperties.setProperty("delayAsymmetry", delayAsymmetry.getText().trim());
-        configProperties.setProperty("fault_reset_interval", fault_reset_interval.getText().trim());
-        configProperties.setProperty("neighborPropDelayThresh", neighborPropDelayThresh.getText().trim());
-        configProperties.setProperty("serverOnly", serverOnly.getText().trim());
-        configProperties.setProperty("G.8275.portDS.localPriority", G_8275_portDS_localPriority.getText().trim());
-        configProperties.setProperty("allowedLostResponses", allowedLostResponses.getText().trim());
-        configProperties.setProperty("asCapable", asCapable.getText().trim());
-        configProperties.setProperty("BMCA", BMCA.getText().trim());
-        configProperties.setProperty("inhibit_announce", inhibit_announce.getText().trim());
-        configProperties.setProperty("inhibit_delay_req", inhibit_delay_req.getText().trim());
-        configProperties.setProperty("ignore_source_id", ignore_source_id.getText().trim());
-        configProperties.setProperty("power_profile.2011.grandmasterTimeInaccuracy", power_profile_2011_grandmasterTimeInaccuracy.getText().trim());
-        configProperties.setProperty("power_profile.2011.networkTimeInaccuracy", power_profile_2011_networkTimeInaccuracy.getText().trim());
-        configProperties.setProperty("power_profile.2017.totalTimeInaccuracy", power_profile_2017_totalTimeInaccuracy.getText().trim());
-        configProperties.setProperty("power_profile.grandmasterID", power_profile_grandmasterID.getText().trim());
-        configProperties.setProperty("power_profile.version", power_profile_version.getText().trim());
-        configProperties.setProperty("ptp_minor_version", ptp_minor_version.getText().trim());
-        configProperties.setProperty("spp", spp.getText().trim());
-        configProperties.setProperty("active_key_id", active_key_id.getText().trim());
-
-
+        configProperties.setProperty("operLogPdelayReqInterval", operLogPdelayReqIntervalField.getText().trim());
+        configProperties.setProperty("announceReceiptTimeout", announceReceiptTimeoutField.getText().trim());
+        configProperties.setProperty("syncReceiptTimeout", syncReceiptTimeoutField.getText().trim());
+        configProperties.setProperty("delay_response_timeout", delay_response_timeoutField.getText().trim());
+        configProperties.setProperty("delayAsymmetry", delayAsymmetryField.getText().trim());
+        configProperties.setProperty("fault_reset_interval", fault_reset_intervalField.getText().trim());
+        configProperties.setProperty("neighborPropDelayThresh", neighborPropDelayThreshField.getText().trim());
+        configProperties.setProperty("serverOnly", serverOnlyCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("G.8275.portDS.localPriority", G_8275_portDS_localPriorityField.getText().trim());
+        configProperties.setProperty("allowedLostResponses", allowedLostResponsesField.getText().trim());
+		configProperties.setProperty("inhibit_announce", inhibit_announceCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("inhibit_delay_req", inhibit_delay_reqCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("ignore_source_id", ignore_source_idCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("power_profile.2011.grandmasterTimeInaccuracy", power_profile_2011_grandmasterTimeInaccuracyField.getText().trim());
+        configProperties.setProperty("power_profile.2011.networkTimeInaccuracy", power_profile_2011_networkTimeInaccuracyField.getText().trim());
+        configProperties.setProperty("power_profile.2017.totalTimeInaccuracy", power_profile_2017_totalTimeInaccuracyField.getText().trim());
+        configProperties.setProperty("power_profile.grandmasterID", power_profile_grandmasterIDField.getText().trim());
+        configProperties.setProperty("power_profile.version", power_profile_versionField.getText().trim());
+        configProperties.setProperty("ptp_minor_version", ptp_minor_versionField.getText().trim());
+        configProperties.setProperty("spp", sppField.getText().trim());
+        configProperties.setProperty("active_key_id", active_key_idField.getText().trim());
         
-        
-        configProperties.setProperty("ingressLatency", ingressLatencyField.getText().trim());
-        configProperties.setProperty("egressLatency", egressLatencyField.getText().trim());
-        
+		// Runtime Options
+		configProperties.setProperty("assume_two_step", assume_two_stepCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("check_fup_sync", check_fup_syncCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("clock_class_threshold", clock_class_thresholdField.getText().trim());
+		configProperties.setProperty("follow_up_info", follow_up_infoCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("hybrid_e2e", hybrid_e2eCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("inhibit_multicast_service", inhibit_multicast_serviceCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("kernel_leap", kernel_leapCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("logging_level", logging_levelField.getText().trim());
+		configProperties.setProperty("net_sync_monitor", net_sync_monitorCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("path_trace_enabled", path_trace_enabledCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("summary_interval", summary_intervalField.getText().trim());
+		configProperties.setProperty("tc_spanning_tree", tc_spanning_treeCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("tx_timestamp_timeout", tx_timestamp_timeoutField.getText().trim());
+		configProperties.setProperty("unicast_listen", unicast_listenCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("unicast_master_table", unicast_master_tableField.getText().trim());
+		configProperties.setProperty("unicast_req_duration", unicast_req_durationField.getText().trim());
+		configProperties.setProperty("use_syslog", use_syslogCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("verbose", verboseCheck.isSelected() ? "1" : "0");
+		
+		// Servo Options
+		configProperties.setProperty("first_step_threshold", first_step_thresholdField.getText().trim());
+		configProperties.setProperty("max_frequency", max_frequencyField.getText().trim());
+		configProperties.setProperty("msg_interval_request", msg_interval_requestCheck.isSelected() ? "1" : "0");
+		configProperties.setProperty("ntpshm_segment", ntpshm_segmentField.getText().trim());
+		configProperties.setProperty("pi_integral_const", pi_integral_constField.getText().trim());
+		configProperties.setProperty("pi_integral_exponent", pi_integral_exponentField.getText().trim());
+		configProperties.setProperty("pi_integral_norm_max", pi_integral_norm_maxField.getText().trim());
+		configProperties.setProperty("pi_integral_scale", pi_integral_scaleField.getText().trim());
+		configProperties.setProperty("pi_proportional_const", pi_proportional_constField.getText().trim());
+		configProperties.setProperty("pi_proportional_exponent", pi_proportional_exponentField.getText().trim());
+		configProperties.setProperty("pi_proportional_norm_max", pi_proportional_norm_maxField.getText().trim());
+		configProperties.setProperty("pi_proportional_scale", pi_proportional_scaleField.getText().trim());
+		configProperties.setProperty("sanity_freq_limit", sanity_freq_limitField.getText().trim());
+		configProperties.setProperty("servo_num_offset_values", servo_num_offset_valuesField.getText().trim());
+		configProperties.setProperty("servo_offset_threshold", servo_offset_thresholdField.getText().trim());
+		configProperties.setProperty("step_threshold", step_thresholdField.getText().trim());
+		configProperties.setProperty("write_phase_mode", write_phase_modeCheck.isSelected() ? "1" : "0");
+		
         // Set combo box values
         String clockType = clockTypeCombo.getValue();
         if (clockType != null) {
@@ -631,27 +800,38 @@ public class PTPConfigController {
             else if (clockType.contains("P2P_TC")) configProperties.setProperty("clock_type", "P2P_TC");
             else if (clockType.contains("E2E_TC")) configProperties.setProperty("clock_type", "E2E_TC");
         }
-        
-        if (clockServoCombo.getValue() != null) {
-            configProperties.setProperty("clock_servo", clockServoCombo.getValue());
-        }
         if (networkTransportCombo.getValue() != null) {
             configProperties.setProperty("network_transport", networkTransportCombo.getValue());
         }
-        if (timeStampingCombo.getValue() != null) {
-            configProperties.setProperty("time_stamping", timeStampingCombo.getValue());
-        }
-        if (delayMechanismCombo.getValue() != null) {
+		if (delayMechanismCombo.getValue() != null) {
             configProperties.setProperty("delay_mechanism", delayMechanismCombo.getValue());
         }
-        
+		if (timeStampingCombo.getValue() != null) {
+            configProperties.setProperty("time_stamping", timeStampingCombo.getValue());
+        }
+		if (tsproc_modeCombo.getValue() != null) {
+            configProperties.setProperty("tsproc_mode", tsproc_modeCombo.getValue());
+        }
+		if (delay_filterCombo.getValue() != null) {
+            configProperties.setProperty("delay_filter", delay_filterCombo.getValue());
+        }
+        if (clock_servoCombo.getValue() != null) {
+            configProperties.setProperty("clock_servo", clock_servoCombo.getValue());
+        } 
+		if (BMCACombo.getValue() != null) {
+            configProperties.setProperty("BMCA", BMCACombo.getValue());
+        }
+		if (asCapableCombo.getValue() != null) {
+            configProperties.setProperty("asCapable", asCapableCombo.getValue());
+        }
+		if (dataset_comparisonCombo.getValue() != null) {
+            configProperties.setProperty("dataset_comparison", dataset_comparisonCombo.getValue());
+        }
+ 
         // Set checkboxes
+		configProperties.setProperty("twoStepFlag", twoStepFlagCheck.isSelected() ? "1" : "0");
         configProperties.setProperty("clientOnly", clientOnlyCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("twoStepFlag", twoStepFlagCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("free_running", freeRunningCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("assume_two_step", assumeTwoStepCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("kernel_leap", kernelLeapCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("use_syslog", useSyslogCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("free_running", free_runningCheck.isSelected() ? "1" : "0");
         
         outputArea.appendText("✅ Config update completed - " + configProperties.size() + " properties set\n");
     }
