@@ -3,20 +3,56 @@ package com.ptpapp;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.scene.text.Text;
+import javafx.stage.Window;
+import javafx.util.Duration;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class PTPConfigController {
 
+
+    @FXML private VBox mainContainer;
+	
+	// YENİ EKLENEN @FXML ALANLARI (SEKMELER)
+    @FXML private Tab defaultOptionsTab;
+    @FXML private Tab portOptionsTab;
+    @FXML private Tab interfaceOptionsTab;
+    @FXML private Tab runtimeOptionsTab;
+    @FXML private Tab servoOptionsTab;
+
+    // YENİ EKLENEN @FXML ALANLARI (PROFIL CHECKBOX'LARI)
+    @FXML private CheckBox e2e_transparent_clock;
+    @FXML private CheckBox p2p_transparent_clock;
+    @FXML private CheckBox g_8265_1;
+    @FXML private CheckBox g_8275_1;
+    @FXML private CheckBox g_8275_2;
+    @FXML private CheckBox g_PTP;
+	
+    @FXML private Label clockTypeInfo;
+    @FXML private final Popup popup = new Popup();
     // Configuration File Management
     @FXML private TextField remoteConfigPathField;
     @FXML private Button saveConfigButton;
@@ -35,72 +71,113 @@ public class PTPConfigController {
     @FXML private Label connectionStatusLabel;
     @FXML private CheckBox enableSSHCheck;
 
-    // Global Options - Clock Configuration
-    @FXML private ComboBox<String> clockTypeCombo;
+    // Default Data Set
+    @FXML private CheckBox clientOnlyCheck;
+    @FXML private TextField clockAccuracyField;
+    @FXML private TextField clockClassField;
+    @FXML private ComboBox<String> dataset_comparisonCombo;
     @FXML private TextField domainNumberField;
+    @FXML private TextField dscp_eventField;
+    @FXML private TextField dscp_generalField;
+    @FXML private CheckBox free_runningCheck;
+    @FXML private TextField freq_est_intervalField;
+    @FXML private TextField G_8275_defaultDS_localPriorityField;
+    @FXML private TextField maxStepsRemovedField;
+    @FXML private TextField offsetScaledLogVarianceField;
     @FXML private TextField priority1Field;
     @FXML private TextField priority2Field;
-    @FXML private TextField clockClassField;
-    @FXML private TextField clockAccuracyField;
-
-    // Global Options - Servo Configuration
-    @FXML private ComboBox<String> clockServoCombo;
-    @FXML private TextField stepThresholdField;
-    @FXML private TextField firstStepThresholdField;
-    @FXML private TextField maxFrequencyField;
-
-    // Global Options - Flags
-    @FXML private CheckBox clientOnlyCheck;
+    @FXML private TextField socket_priorityField;
     @FXML private CheckBox twoStepFlagCheck;
-    @FXML private CheckBox freeRunningCheck;
-    @FXML private CheckBox assumeTwoStepCheck;
-    @FXML private CheckBox kernelLeapCheck;
-    @FXML private CheckBox useSyslogCheck;
+    @FXML private TextField utc_offsetField;
 
-    // Port Options - Network Transport
+    // Interface Options
+    @FXML private ComboBox<String> clockTypeCombo;
     @FXML private ComboBox<String> networkTransportCombo;
-    @FXML private ComboBox<String> timeStampingCombo;
     @FXML private ComboBox<String> delayMechanismCombo;
+    @FXML private ComboBox<String> timeStampingCombo;
+    @FXML private ComboBox<String> tsproc_modeCombo;
+    @FXML private ComboBox<String> delay_filterCombo;
+    @FXML private TextField delay_filter_lengthField;
+    @FXML private TextField ingressLatencyField;
+    @FXML private TextField egressLatencyField;
+    @FXML private TextField boundary_clock_jbodField;
+    @FXML private TextField phc_indexField;
 
     // Port Options
     @FXML private TextField logAnnounceIntervalField;
     @FXML private TextField logSyncIntervalField;
-    @FXML private TextField operLogSyncInterval;
+    @FXML private TextField operLogSyncIntervalField;
     @FXML private TextField logMinDelayReqIntervalField;
     @FXML private TextField logMinPdelayReqIntervalField;
-    @FXML private TextField operLogPdelayReqInterval;
-    @FXML private TextField announceReceiptTimeout;
-    @FXML private TextField syncReceiptTimeout;
-    @FXML private TextField delay_response_timeout;
+    @FXML private TextField operLogPdelayReqIntervalField;
+    @FXML private TextField announceReceiptTimeoutField;
+    @FXML private TextField syncReceiptTimeoutField;
+    @FXML private TextField delay_response_timeoutField;
     @FXML private TextField delayAsymmetryField;
-    @FXML private TextField fault_reset_interval;
-    @FXML private TextField neighborPropDelayThresh;
-    @FXML private TextField serverOnly;
-    @FXML private TextField G_8275_portDS_localPriority;
-    @FXML private TextField allowedLostResponses;
-    @FXML private TextField asCapable;	
-    @FXML private TextField BMCA;
-    @FXML private TextField inhibit_announce;
-    @FXML private TextField inhibit_delay_req;
-    @FXML private TextField ignore_source_id;
-    @FXML private TextField power_profile_2011_grandmasterTimeInaccuracy;
-    @FXML private TextField power_profile_2011_networkTimeInaccuracy;
-    @FXML private TextField power_profile_2017_totalTimeInaccuracy;
-    @FXML private TextField power_profile_grandmasterID;
-    @FXML private TextField power_profile_version;
-    @FXML private TextField ptp_minor_version;
-    @FXML private TextField spp;
-    @FXML private TextField active_key_id;
+    @FXML private TextField fault_reset_intervalField;
+    @FXML private TextField neighborPropDelayThreshField;
+    @FXML private CheckBox serverOnlyCheck;
+    @FXML private TextField G_8275_portDS_localPriorityField;
+    @FXML private TextField allowedLostResponsesField;
+    @FXML private ComboBox<String> asCapableCombo;
+    @FXML private ComboBox<String> BMCACombo;
+    @FXML private CheckBox inhibit_announceCheck;
+    @FXML private CheckBox inhibit_delay_reqCheck;
+    @FXML private CheckBox ignore_source_idCheck;
+    @FXML private TextField power_profile_2011_grandmasterTimeInaccuracyField;
+    @FXML private TextField power_profile_2011_networkTimeInaccuracyField;
+    @FXML private TextField power_profile_2017_totalTimeInaccuracyField;
+    @FXML private TextField power_profile_grandmasterIDField;
+    @FXML private TextField power_profile_versionField;
+    @FXML private TextField ptp_minor_versionField;
+    @FXML private TextField sppField;
+    @FXML private TextField active_key_idField;
+
+    // Runtime Options
+    @FXML private CheckBox assume_two_stepCheck;
+    @FXML private CheckBox check_fup_syncCheck;
+    @FXML private TextField clock_class_thresholdField;
+    @FXML private CheckBox follow_up_infoCheck;
+    @FXML private CheckBox hybrid_e2eCheck;
+    @FXML private CheckBox inhibit_multicast_serviceCheck;
+    @FXML private CheckBox kernel_leapCheck;
+    @FXML private TextField logging_levelField;
+    @FXML private CheckBox net_sync_monitorCheck;
+    @FXML private CheckBox path_trace_enabledCheck;
+    @FXML private TextField summary_intervalField;
+    @FXML private CheckBox tc_spanning_treeCheck;
+    @FXML private TextField tx_timestamp_timeoutField;
+    @FXML private CheckBox unicast_listenCheck;
+    @FXML private TextField unicast_master_tableField;
+    @FXML private TextField unicast_req_durationField;
+    @FXML private CheckBox use_syslogCheck;
+    @FXML private CheckBox verboseCheck;
+
+    // Servo Configuration
+    @FXML private ComboBox<String> clock_servoCombo;
+    @FXML private TextField first_step_thresholdField;
+    @FXML private TextField max_frequencyField;
+    @FXML private CheckBox msg_interval_requestCheck;
+    @FXML private TextField ntpshm_segmentField;
+    @FXML private TextField pi_integral_constField;
+    @FXML private TextField pi_integral_exponentField;
+    @FXML private TextField pi_integral_norm_maxField;
+    @FXML private TextField pi_integral_scaleField;
+    @FXML private TextField pi_proportional_constField;
+    @FXML private TextField pi_proportional_exponentField;
+    @FXML private TextField pi_proportional_norm_maxField;
+    @FXML private TextField pi_proportional_scaleField;
+    @FXML private TextField sanity_freq_limitField;
+    @FXML private TextField servo_num_offset_valuesField;
+    @FXML private TextField servo_offset_thresholdField;
+    @FXML private TextField step_thresholdField;
+    @FXML private CheckBox write_phase_modeCheck;
 
 
-    @FXML private TextField ingressLatencyField;
-    @FXML private TextField egressLatencyField;
-
-    // Interface & Execution
+    // Execution
     @FXML private TextField interfaceNameField;
     @FXML private CheckBox masterModeCheck;
     @FXML private CheckBox useSudoCheck;
-    @FXML private CheckBox verboseCheck;
     @FXML private CheckBox quietCheck;
     @FXML private TextField printLevelField;
 
@@ -124,36 +201,116 @@ public class PTPConfigController {
         setupOutputArea();
         loadDefaultValues();
         setupSSH();
+        setupInfo();
+		
+		setupProfileTabLogic();
+
+        // SADECE "ÖN-ISITMA" FONKSİYONUNU ÇAĞIRIYORUZ.
+        // Tüm görsel ayarlar ve gecikme süreleri styles.css dosyasından yönetiliyor.
+        Platform.runLater(() -> prewarmAllTooltips(mainContainer));
     }
 
+	private void setupProfileTabLogic() {
+        // Tüm profil CheckBox'larını bir listeye topluyoruz
+        List<CheckBox> profileCheckBoxes = Arrays.asList(
+                e2e_transparent_clock, p2p_transparent_clock, g_8265_1,
+                g_8275_1, g_8275_2, g_PTP
+        );
+
+        // Her bir CheckBox için olay dinleyici (action listener) ekliyoruz
+        for (CheckBox cb : profileCheckBoxes) {
+            cb.setOnAction(event -> handleProfileSelection(cb, profileCheckBoxes));
+        }
+    }
+	
+	private void handleProfileSelection(CheckBox selectedCb, List<CheckBox> allCheckBoxes) {
+        // Eğer seçilen CheckBox işaretlendiyse:
+        if (selectedCb.isSelected()) {
+            // Diğer tüm CheckBox'ların işaretini kaldır
+            for (CheckBox otherCb : allCheckBoxes) {
+                if (otherCb != selectedCb) {
+                    otherCb.setSelected(false);
+                }
+            }
+        }
+        // Her durumda (seçim yapıldığında veya kaldırıldığında) sekmelerin durumunu güncelle
+        updateTabDisablingState(allCheckBoxes);
+    }
+	
+	private void updateTabDisablingState(List<CheckBox> allCheckBoxes) {
+        // Herhangi bir CheckBox'ın seçili olup olmadığını kontrol et
+        boolean isAnyProfileSelected = allCheckBoxes.stream().anyMatch(CheckBox::isSelected);
+
+        // Devre dışı bırakılacak sekmeleri bir listeye al
+        List<Tab> configurableTabs = Arrays.asList(
+                defaultOptionsTab, portOptionsTab, interfaceOptionsTab,
+                runtimeOptionsTab, servoOptionsTab
+        );
+
+        // Her bir sekmeyi, bir profil seçiliyse devre dışı bırak, değilse etkinleştir
+        for (Tab tab : configurableTabs) {
+            tab.setDisable(isAnyProfileSelected);
+        }
+    }
     private void setupComboBoxes() {
         // Clock Type options
         clockTypeCombo.setItems(FXCollections.observableArrayList(
-            "OC (Ordinary Clock)", "BC (Boundary Clock)", "P2P_TC (P2P Transparent)", "E2E_TC (E2E Transparent)"
+                "OC (Ordinary Clock)", "BC (Boundary Clock)", "P2P_TC (P2P Transparent)", "E2E_TC (E2E Transparent)"
         ));
         clockTypeCombo.setValue("OC (Ordinary Clock)");
 
-        // Clock Servo options
-        clockServoCombo.setItems(FXCollections.observableArrayList(
-            "pi", "linreg", "ntpshm", "refclock_sock", "nullf"
-        ));
-        clockServoCombo.setValue("pi");
-
         // Network Transport options
-        networkTransportCombo.setItems(FXCollections.observableArrayList("UDPv4", "UDPv6", "L2"));
-        networkTransportCombo.setValue("UDPv4");
-
-        // Time Stamping options
-        timeStampingCombo.setItems(FXCollections.observableArrayList(
-            "hardware", "software", "legacy", "onestep", "p2p1step"
+        networkTransportCombo.setItems(FXCollections.observableArrayList(
+                "UDPv4", "UDPv6", "L2"
         ));
-        timeStampingCombo.setValue("hardware");
+        networkTransportCombo.setValue("UDPv4");
 
         // Delay Mechanism options
         delayMechanismCombo.setItems(FXCollections.observableArrayList(
-            "E2E", "P2P", "Auto", "NONE"
+                "E2E", "P2P", "Auto", "NONE"
         ));
         delayMechanismCombo.setValue("E2E");
+
+        // Time Stamping options
+        timeStampingCombo.setItems(FXCollections.observableArrayList(
+                "hardware", "software", "legacy", "onestep", "p2p1step"
+        ));
+        timeStampingCombo.setValue("hardware");
+
+        // Time Stamping Processing Mode options
+        tsproc_modeCombo.setItems(FXCollections.observableArrayList(
+                "filter", "raw", "filter_weight", "raw_weight"
+        ));
+        tsproc_modeCombo.setValue("filter");
+
+        // Delay Filter options
+        delay_filterCombo.setItems(FXCollections.observableArrayList(
+                "moving_avarage", "moving_median"
+        ));
+        delay_filterCombo.setValue("moving_median");
+
+        // Clock Servo options
+        clock_servoCombo.setItems(FXCollections.observableArrayList(
+                "pi", "linreg", "ntpshm", "refclock_sock", "nullf"
+        ));
+        clock_servoCombo.setValue("pi");
+
+
+        BMCACombo.setItems(FXCollections.observableArrayList(
+                "noop", "ptp"
+        ));
+        BMCACombo.setValue("ptp");
+
+        asCapableCombo.setItems(FXCollections.observableArrayList(
+                "true", "auto"
+        ));
+        asCapableCombo.setValue("auto");
+
+        dataset_comparisonCombo.setItems(FXCollections.observableArrayList(
+                "ieee1588", "G.8275.x"
+        ));
+        dataset_comparisonCombo.setValue("ieee1588");
+
     }
 
     private void setupButtons() {
@@ -173,87 +330,140 @@ public class PTPConfigController {
         outputArea.setWrapText(true);
     }
 
+
     private void loadDefaultValues() {
-        // Default values based on ptp4l manual
-        domainNumberField.setText("0");
+
+        //
+        sshHostField.setText("192.168.7.2");
+        sshUsernameField.setText("debian");
+        sshPasswordField.setText("temppwd");
+        // Defaul Data Set
+        socket_priorityField.setText("0");
         priority1Field.setText("128");
         priority2Field.setText("128");
+        domainNumberField.setText("0");
         clockClassField.setText("248");
         clockAccuracyField.setText("0xFE");
-        
-        stepThresholdField.setText("0.0");
-        firstStepThresholdField.setText("0.00002");
-        maxFrequencyField.setText("900000000");
+        offsetScaledLogVarianceField.setText("0xFFFF");
+        freq_est_intervalField.setText("1");
+        dscp_eventField.setText("0");
+        dscp_generalField.setText("0");
+        G_8275_defaultDS_localPriorityField.setText("128");
+        maxStepsRemovedField.setText("255");
+        utc_offsetField.setText("37");
 
-        // Default Port Options
-
-        logAnnounceIntervalField.setText("1");
-        logSyncIntervalField.setText("0");
-        operLogSyncInterval.setText("0");
-        logMinDelayReqIntervalField.setText("0");
-        logMinPdelayReqIntervalField.setText("0");
-        operLogPdelayReqInterval.setText("0");
-        announceReceiptTimeout.setText("3");
-        syncReceiptTimeout.setText("0");
-        delay_response_timeout.setText("0");
-        delayAsymmetryField.setText("0");
-        fault_reset_interval.setText("4");
-        neighborPropDelayThresh.setText("200000000");
-        serverOnly.setText("0");
-        G_8275_portDS_localPriority.setText("128");
-        allowedLostResponses.setText("3");
-        asCapable.setText("auto");
-        BMCA.setText("ptp");
-        inhibit_announce.setText("0");
-        inhibit_delay_req.setText("0");
-        ignore_source_id.setText("0");
-        power_profile_2011_grandmasterTimeInaccuracy.setText("-1");
-        power_profile_2011_networkTimeInaccuracy.setText("-1");
-        power_profile_2017_totalTimeInaccuracy.setText("-1");
-        power_profile_grandmasterID.setText("0");
-        power_profile_version.setText("none");
-        ptp_minor_version.setText("1");
-        spp.setText("-1");
-        active_key_id.setText("0");
-
-        
+        // Interface Options
+        delay_filter_lengthField.setText("10");
         ingressLatencyField.setText("0");
         egressLatencyField.setText("0");
-        
+        boundary_clock_jbodField.setText("0");
+        phc_indexField.setText("-1");
+
+        // Default Port Options
+        logAnnounceIntervalField.setText("1");
+        logSyncIntervalField.setText("0");
+        operLogSyncIntervalField.setText("0");
+        logMinDelayReqIntervalField.setText("0");
+        logMinPdelayReqIntervalField.setText("0");
+        operLogPdelayReqIntervalField.setText("0");
+        announceReceiptTimeoutField.setText("3");
+        syncReceiptTimeoutField.setText("0");
+        delay_response_timeoutField.setText("0");
+        delayAsymmetryField.setText("0");
+        fault_reset_intervalField.setText("4");
+        neighborPropDelayThreshField.setText("200000000");
+        serverOnlyCheck.setSelected(false);
+        G_8275_portDS_localPriorityField.setText("128");
+        allowedLostResponsesField.setText("3");
+        inhibit_announceCheck.setSelected(false);
+        inhibit_delay_reqCheck.setSelected(false);
+        ignore_source_idCheck.setSelected(false);
+        power_profile_2011_grandmasterTimeInaccuracyField.setText("-1");
+        power_profile_2011_networkTimeInaccuracyField.setText("-1");
+        power_profile_2017_totalTimeInaccuracyField.setText("-1");
+        power_profile_grandmasterIDField.setText("0");
+        power_profile_versionField.setText("none");
+        ptp_minor_versionField.setText("1");
+        sppField.setText("-1");
+        active_key_idField.setText("0");
+
+
+        // Runtime Options
+        assume_two_stepCheck.setSelected(false);
+        check_fup_syncCheck.setSelected(false);
+        clock_class_thresholdField.setText("248");
+        follow_up_infoCheck.setSelected(false);
+        hybrid_e2eCheck.setSelected(false);
+        inhibit_multicast_serviceCheck.setSelected(false);
+        kernel_leapCheck.setSelected(true);
+        logging_levelField.setText("6");
+        net_sync_monitorCheck.setSelected(false);
+        path_trace_enabledCheck.setSelected(false);
+        summary_intervalField.setText("0");
+        tc_spanning_treeCheck.setSelected(false);
+        tx_timestamp_timeoutField.setText("10");
+        unicast_listenCheck.setSelected(false);
+        unicast_master_tableField.setText("0");
+        unicast_req_durationField.setText("3600");
+        use_syslogCheck.setSelected(true);
+        verboseCheck.setSelected(false);
+
+
+        // Servo Options
+        first_step_thresholdField.setText("0.00002");
+        max_frequencyField.setText("900000000");
+        msg_interval_requestCheck.setSelected(false);
+        ntpshm_segmentField.setText("0");
+        pi_integral_constField.setText("0.0");
+        pi_integral_exponentField.setText("0.4");
+        pi_integral_norm_maxField.setText("0.3");
+        pi_integral_scaleField.setText("0.0");
+        pi_proportional_constField.setText("0.0");
+        pi_proportional_exponentField.setText("-0.3");
+        pi_proportional_norm_maxField.setText("0.7");
+        pi_proportional_scaleField.setText("0.0");
+        sanity_freq_limitField.setText("200000000");
+        servo_num_offset_valuesField.setText("10");
+        servo_offset_thresholdField.setText("0");
+        step_thresholdField.setText("0.0");
+        write_phase_modeCheck.setSelected(false);
+
         interfaceNameField.setText("eth0");
         printLevelField.setText("6");
-        
+
         sshPortField.setText("22");
         remoteConfigPathField.setText("~/ptp4l.conf");
-        
+
         // Default flags
         useSudoCheck.setSelected(true);
         twoStepFlagCheck.setSelected(true);
-        kernelLeapCheck.setSelected(true);
-        useSyslogCheck.setSelected(true);
+        clientOnlyCheck.setSelected(false);
+        free_runningCheck.setSelected(false);
     }
-    
+
     private void setupSSH() {
         sshManager = new SSHConnectionManager();
-        
+
         // Setup SSH UI event handlers
         enableSSHCheck.setOnAction(e -> toggleSSHMode());
         connectSSHButton.setOnAction(e -> connectSSH());
         disconnectSSHButton.setOnAction(e -> disconnectSSH());
         browseKeyButton.setOnAction(e -> browseSSHKey());
         useSSHKeyCheck.setOnAction(e -> toggleSSHAuthMode());
-        
+
         // Initial state
         updateSSHUIState();
         updateConnectionStatus();
     }
-    
+    private void setupInfo() {
+        setInfo(clockTypeInfo, "Specifies the kind of PTP clock.");
+    }
     private void toggleSSHMode() {
         isSSHEnabled = enableSSHCheck.isSelected();
         updateSSHUIState();
         updateButtonStates();
     }
-    
+
     private void toggleSSHAuthMode() {
         boolean useKey = useSSHKeyCheck.isSelected();
         sshPasswordField.setDisable(useKey);
@@ -261,10 +471,10 @@ public class PTPConfigController {
         sshKeyPassphraseField.setDisable(!useKey);
         browseKeyButton.setDisable(!useKey);
     }
-    
+
     private void updateSSHUIState() {
         boolean sshEnabled = enableSSHCheck.isSelected();
-        
+
         sshHostField.setDisable(!sshEnabled);
         sshPortField.setDisable(!sshEnabled);
         sshUsernameField.setDisable(!sshEnabled);
@@ -276,21 +486,21 @@ public class PTPConfigController {
         connectSSHButton.setDisable(!sshEnabled);
         disconnectSSHButton.setDisable(!sshEnabled || !sshManager.isConnected());
     }
-    
+
     private void connectSSH() {
         String hostname = sshHostField.getText().trim();
         String portText = sshPortField.getText().trim();
         String username = sshUsernameField.getText().trim();
-        
+
         outputArea.appendText("🔄 Starting SSH connection process...\n");
         outputArea.appendText("📡 Target: " + username + "@" + hostname + ":" + portText + "\n");
-        
+
         if (hostname.isEmpty() || username.isEmpty()) {
             outputArea.appendText("❌ SSH Configuration Error: Missing hostname or username\n");
             showAlert("SSH Configuration Error", "Please enter hostname and username.");
             return;
         }
-        
+
         int port;
         try {
             port = Integer.parseInt(portText);
@@ -299,19 +509,19 @@ public class PTPConfigController {
             port = 22;
             outputArea.appendText("⚠️ Invalid port, defaulting to 22\n");
         }
-        
+
         connectSSHButton.setDisable(true);
         connectionStatusLabel.setText("Connecting...");
-        
+
         CompletableFuture<Boolean> connectionFuture;
-        
+
         if (useSSHKeyCheck.isSelected()) {
             String keyPath = sshKeyPathField.getText().trim();
             String passphrase = sshKeyPassphraseField.getText();
-            
+
             outputArea.appendText("🔑 Using SSH key authentication\n");
             outputArea.appendText("🔑 Key path: " + keyPath + "\n");
-            
+
             if (keyPath.isEmpty()) {
                 outputArea.appendText("❌ SSH Key Error: No key path specified\n");
                 showAlert("SSH Key Error", "Please select an SSH private key file.");
@@ -319,12 +529,12 @@ public class PTPConfigController {
                 updateConnectionStatus();
                 return;
             }
-            
+
             connectionFuture = sshManager.connectWithKey(hostname, port, username, keyPath, passphrase);
         } else {
             String password = sshPasswordField.getText();
             outputArea.appendText("🔐 Using password authentication\n");
-            
+
             if (password.isEmpty()) {
                 outputArea.appendText("❌ SSH Password Error: No password entered\n");
                 showAlert("SSH Password Error", "Please enter the SSH password.");
@@ -332,18 +542,18 @@ public class PTPConfigController {
                 updateConnectionStatus();
                 return;
             }
-            
+
             connectionFuture = sshManager.connect(hostname, port, username, password);
         }
-        
+
         outputArea.appendText("⏳ Attempting connection...\n");
-        
+
         connectionFuture.thenAccept(success -> {
             Platform.runLater(() -> {
                 if (success) {
                     outputArea.appendText("✅ SSH connection established: " + sshManager.getConnectionInfo() + "\n");
                     outputArea.appendText("🔍 Running connection test...\n");
-                    
+
                     // Test basic SSH command
                     sshManager.executeCommand("whoami && pwd && echo 'SSH_TEST_SUCCESS'").thenAccept(testResult -> {
                         Platform.runLater(() -> {
@@ -372,7 +582,7 @@ public class PTPConfigController {
             return null;
         });
     }
-    
+
     private void disconnectSSH() {
         outputArea.appendText("🔄 Disconnecting SSH...\n");
         sshManager.disconnect();
@@ -381,23 +591,23 @@ public class PTPConfigController {
         updateSSHUIState();
         updateButtonStates();
     }
-    
+
     private void browseSSHKey() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select SSH Private Key");
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("SSH Keys", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519")
+                new FileChooser.ExtensionFilter("SSH Keys", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519")
         );
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("All Files", "*.*")
+                new FileChooser.ExtensionFilter("All Files", "*.*")
         );
-        
+
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             sshKeyPathField.setText(selectedFile.getAbsolutePath());
         }
     }
-    
+
     private void updateConnectionStatus() {
         if (isSSHEnabled && sshManager.isConnected()) {
             connectionStatusLabel.setText("Connected: " + sshManager.getConnectionInfo());
@@ -416,10 +626,10 @@ public class PTPConfigController {
             // Write header comment
             writer.write("# PTP4L Configuration - Generated by PTP Configuration Tool\n");
             writer.write("# " + java.time.LocalDateTime.now().toString() + "\n\n");
-            
+
             // Write [global] section
             writer.write("[global]\n");
-            
+
             // Write all configuration properties with space format (key value)
             for (String key : configProperties.stringPropertyNames()) {
                 String value = configProperties.getProperty(key);
@@ -432,22 +642,22 @@ public class PTPConfigController {
 
     private void saveAndUploadConfig() {
         outputArea.appendText("\n=== SAVE & UPLOAD CONFIG STARTED ===\n");
-        
+
         // Create a temporary config file
         String tempConfigPath = System.getProperty("java.io.tmpdir") + "/ptp4l_temp.conf";
         outputArea.appendText("📁 Temp config path: " + tempConfigPath + "\n");
-        
+
         // Update configuration from UI
         outputArea.appendText("🔄 Reading configuration from UI fields...\n");
         updateConfigFromUI();
         outputArea.appendText("✅ Configuration read from UI completed\n");
-        
+
         try {
             // Save to temp file with proper PTP4L format
             outputArea.appendText("💾 Saving configuration to temp file...\n");
             savePTP4LConfigFile(tempConfigPath);
             outputArea.appendText("✅ Configuration saved locally to: " + tempConfigPath + "\n");
-            
+
             // Show what was saved for debugging
             try {
                 String savedContent = Files.readString(Paths.get(tempConfigPath));
@@ -466,7 +676,7 @@ public class PTPConfigController {
         outputArea.appendText("🔍 Checking SSH status for upload...\n");
         outputArea.appendText("📊 SSH Enabled: " + isSSHEnabled + "\n");
         outputArea.appendText("📊 SSH Connected: " + (sshManager != null ? sshManager.isConnected() : "null manager") + "\n");
-        
+
         if (isSSHEnabled && sshManager.isConnected()) {
             String remotePath = remoteConfigPathField.getText().trim();
             outputArea.appendText("📍 Remote path: '" + remotePath + "'\n");
@@ -478,35 +688,35 @@ public class PTPConfigController {
             }
 
             outputArea.appendText("🚀 Starting remote upload process...\n");
-            
+
             // Do all file I/O in background thread, then switch to UI thread for SSH operations
             CompletableFuture.runAsync(() -> {
                 try {
                     // Read temp file in background thread (this is the blocking I/O)
                     String configContent = Files.readString(Paths.get(tempConfigPath));
-                    
+
                     // Now switch to UI thread for SSH operations and UI updates
                     Platform.runLater(() -> {
                         outputArea.appendText("📖 Read " + configContent.length() + " characters from temp file\n");
                         outputArea.appendText("🔄 Uploading config to remote: " + remotePath + "\n");
-                        
+
                         // Check directory (this is async SSH, won't block UI)
                         String dirPath = remotePath.substring(0, remotePath.lastIndexOf('/'));
                         outputArea.appendText("📁 Checking directory: " + dirPath + "\n");
-                        
+
                         sshManager.executeCommand("ls -la " + dirPath).thenAccept(dirResult -> {
                             Platform.runLater(() -> {
                                 outputArea.appendText("📁 Directory check result:\n" + dirResult + "\n");
-                                
+
                                 // Prepare upload command
-                                boolean needsSudo = remotePath.startsWith("/etc/") || remotePath.startsWith("/usr/") || 
-                                                  remotePath.startsWith("/var/") || remotePath.startsWith("/opt/");
-                                
+                                boolean needsSudo = remotePath.startsWith("/etc/") || remotePath.startsWith("/usr/") ||
+                                        remotePath.startsWith("/var/") || remotePath.startsWith("/opt/");
+
                                 outputArea.appendText("📤 Attempting file upload" + (needsSudo ? " (redirected to home)" : "") + "...\n");
-                                
+
                                 String uploadCommand;
                                 String actualPath;
-                                
+
                                 if (needsSudo) {
                                     // For system directories, write to user's home directory instead
                                     actualPath = "~/ptp4l.conf";
@@ -521,14 +731,14 @@ public class PTPConfigController {
                                     uploadCommand = "echo \"" + escapedContent + "\" > " + actualPath;
                                     outputArea.appendText("📤 Using echo method for user directory\n");
                                 }
-                                
+
                                 outputArea.appendText("📤 Upload command: " + uploadCommand + "\n");
-                                
+
                                 // Execute upload command (async SSH, won't block UI)
                                 sshManager.executeCommand(uploadCommand).thenAccept(result -> {
                                     Platform.runLater(() -> {
                                         outputArea.appendText("📥 Upload Response (" + result.length() + " chars): '" + result + "'\n");
-                                        
+
                                         // Verify the upload (async SSH, won't block UI)
                                         outputArea.appendText("🔍 Verifying upload...\n");
                                         sshManager.executeCommand("ls -la " + actualPath + " && echo '--- File Content ---' && cat " + actualPath).thenAccept(verifyResult -> {
@@ -571,58 +781,103 @@ public class PTPConfigController {
 
     private void updateConfigFromUI() {
         outputArea.appendText("🔧 Updating config from UI fields...\n");
-        
-        // Update configuration properties from UI
-        configProperties.setProperty("domainNumber", domainNumberField.getText().trim());
+		 
+        // Default Data Set
+        configProperties.setProperty("socket_priority", socket_priorityField.getText().trim());
         configProperties.setProperty("priority1", priority1Field.getText().trim());
         configProperties.setProperty("priority2", priority2Field.getText().trim());
+        configProperties.setProperty("domainNumber", domainNumberField.getText().trim());
         configProperties.setProperty("clockClass", clockClassField.getText().trim());
         configProperties.setProperty("clockAccuracy", clockAccuracyField.getText().trim());
-        
-        outputArea.appendText("📝 Basic config: domain=" + domainNumberField.getText().trim() + 
-                            ", priority1=" + priority1Field.getText().trim() + 
-                            ", priority2=" + priority2Field.getText().trim() + "\n");
-        
-        configProperties.setProperty("step_threshold", stepThresholdField.getText().trim());
-        configProperties.setProperty("first_step_threshold", firstStepThresholdField.getText().trim());
-        configProperties.setProperty("max_frequency", maxFrequencyField.getText().trim());
+        configProperties.setProperty("offsetScaledLogVariance", offsetScaledLogVarianceField.getText().trim());
+        configProperties.setProperty("freq_est_interval", freq_est_intervalField.getText().trim());
+        configProperties.setProperty("dscp_event", dscp_eventField.getText().trim());
+        configProperties.setProperty("dscp_general", dscp_generalField.getText().trim());
+        configProperties.setProperty("G.8275.defaultDS.localPriority", G_8275_defaultDS_localPriorityField.getText().trim());
+        configProperties.setProperty("maxStepsRemoved", maxStepsRemovedField.getText().trim());
+        configProperties.setProperty("utc_offset", utc_offsetField.getText().trim());
+
+
+        // Update configuration properties from UI
+
+        outputArea.appendText("📝 Basic config: domain=" + domainNumberField.getText().trim() +
+                ", priority1=" + priority1Field.getText().trim() +
+                ", priority2=" + priority2Field.getText().trim() + "\n");
+
+        // Interface Options
+        configProperties.setProperty("delay_filter_length", delay_filter_lengthField.getText().trim());
+        configProperties.setProperty("ingressLatency", ingressLatencyField.getText().trim());
+        configProperties.setProperty("egressLatency", egressLatencyField.getText().trim());
+        configProperties.setProperty("boundary_clock_jbod", boundary_clock_jbodField.getText().trim());
+        configProperties.setProperty("phc_index", phc_indexField.getText().trim());
 
         // Port Options
         configProperties.setProperty("logAnnounceInterval", logAnnounceIntervalField.getText().trim());
         configProperties.setProperty("logSyncInterval", logSyncIntervalField.getText().trim());
-        configProperties.setProperty("operLogSyncInterval", operLogSyncInterval.getText().trim());
+        configProperties.setProperty("operLogSyncInterval", operLogSyncIntervalField.getText().trim());
         configProperties.setProperty("logMinDelayReqInterval", logMinDelayReqIntervalField.getText().trim());
         configProperties.setProperty("logMinPdelayReqInterval", logMinPdelayReqIntervalField.getText().trim());
-        configProperties.setProperty("operLogPdelayReqInterval", operLogPdelayReqInterval.getText().trim());
-        configProperties.setProperty("announceReceiptTimeout", announceReceiptTimeout.getText().trim());
-        configProperties.setProperty("syncReceiptTimeout", syncReceiptTimeout.getText().trim());
-        configProperties.setProperty("delay_response_timeout", delay_response_timeout.getText().trim());
-        configProperties.setProperty("delayAsymmetry", delayAsymmetry.getText().trim());
-        configProperties.setProperty("fault_reset_interval", fault_reset_interval.getText().trim());
-        configProperties.setProperty("neighborPropDelayThresh", neighborPropDelayThresh.getText().trim());
-        configProperties.setProperty("serverOnly", serverOnly.getText().trim());
-        configProperties.setProperty("G.8275.portDS.localPriority", G_8275_portDS_localPriority.getText().trim());
-        configProperties.setProperty("allowedLostResponses", allowedLostResponses.getText().trim());
-        configProperties.setProperty("asCapable", asCapable.getText().trim());
-        configProperties.setProperty("BMCA", BMCA.getText().trim());
-        configProperties.setProperty("inhibit_announce", inhibit_announce.getText().trim());
-        configProperties.setProperty("inhibit_delay_req", inhibit_delay_req.getText().trim());
-        configProperties.setProperty("ignore_source_id", ignore_source_id.getText().trim());
-        configProperties.setProperty("power_profile.2011.grandmasterTimeInaccuracy", power_profile_2011_grandmasterTimeInaccuracy.getText().trim());
-        configProperties.setProperty("power_profile.2011.networkTimeInaccuracy", power_profile_2011_networkTimeInaccuracy.getText().trim());
-        configProperties.setProperty("power_profile.2017.totalTimeInaccuracy", power_profile_2017_totalTimeInaccuracy.getText().trim());
-        configProperties.setProperty("power_profile.grandmasterID", power_profile_grandmasterID.getText().trim());
-        configProperties.setProperty("power_profile.version", power_profile_version.getText().trim());
-        configProperties.setProperty("ptp_minor_version", ptp_minor_version.getText().trim());
-        configProperties.setProperty("spp", spp.getText().trim());
-        configProperties.setProperty("active_key_id", active_key_id.getText().trim());
+        configProperties.setProperty("operLogPdelayReqInterval", operLogPdelayReqIntervalField.getText().trim());
+        configProperties.setProperty("announceReceiptTimeout", announceReceiptTimeoutField.getText().trim());
+        configProperties.setProperty("syncReceiptTimeout", syncReceiptTimeoutField.getText().trim());
+        configProperties.setProperty("delay_response_timeout", delay_response_timeoutField.getText().trim());
+        configProperties.setProperty("delayAsymmetry", delayAsymmetryField.getText().trim());
+        configProperties.setProperty("fault_reset_interval", fault_reset_intervalField.getText().trim());
+        configProperties.setProperty("neighborPropDelayThresh", neighborPropDelayThreshField.getText().trim());
+        configProperties.setProperty("serverOnly", serverOnlyCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("G.8275.portDS.localPriority", G_8275_portDS_localPriorityField.getText().trim());
+        configProperties.setProperty("allowedLostResponses", allowedLostResponsesField.getText().trim());
+        configProperties.setProperty("inhibit_announce", inhibit_announceCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("inhibit_delay_req", inhibit_delay_reqCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("ignore_source_id", ignore_source_idCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("power_profile.2011.grandmasterTimeInaccuracy", power_profile_2011_grandmasterTimeInaccuracyField.getText().trim());
+        configProperties.setProperty("power_profile.2011.networkTimeInaccuracy", power_profile_2011_networkTimeInaccuracyField.getText().trim());
+        configProperties.setProperty("power_profile.2017.totalTimeInaccuracy", power_profile_2017_totalTimeInaccuracyField.getText().trim());
+        configProperties.setProperty("power_profile.grandmasterID", power_profile_grandmasterIDField.getText().trim());
+        configProperties.setProperty("power_profile.version", power_profile_versionField.getText().trim());
+        configProperties.setProperty("ptp_minor_version", ptp_minor_versionField.getText().trim());
+        configProperties.setProperty("spp", sppField.getText().trim());
+        configProperties.setProperty("active_key_id", active_key_idField.getText().trim());
 
+        // Runtime Options
+        configProperties.setProperty("assume_two_step", assume_two_stepCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("check_fup_sync", check_fup_syncCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("clock_class_threshold", clock_class_thresholdField.getText().trim());
+        configProperties.setProperty("follow_up_info", follow_up_infoCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("hybrid_e2e", hybrid_e2eCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("inhibit_multicast_service", inhibit_multicast_serviceCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("kernel_leap", kernel_leapCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("logging_level", logging_levelField.getText().trim());
+        configProperties.setProperty("net_sync_monitor", net_sync_monitorCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("path_trace_enabled", path_trace_enabledCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("summary_interval", summary_intervalField.getText().trim());
+        configProperties.setProperty("tc_spanning_tree", tc_spanning_treeCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("tx_timestamp_timeout", tx_timestamp_timeoutField.getText().trim());
+        configProperties.setProperty("unicast_listen", unicast_listenCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("unicast_master_table", unicast_master_tableField.getText().trim());
+        configProperties.setProperty("unicast_req_duration", unicast_req_durationField.getText().trim());
+        configProperties.setProperty("use_syslog", use_syslogCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("verbose", verboseCheck.isSelected() ? "1" : "0");
 
-        
-        
-        configProperties.setProperty("ingressLatency", ingressLatencyField.getText().trim());
-        configProperties.setProperty("egressLatency", egressLatencyField.getText().trim());
-        
+        // Servo Options
+        configProperties.setProperty("first_step_threshold", first_step_thresholdField.getText().trim());
+        configProperties.setProperty("max_frequency", max_frequencyField.getText().trim());
+        configProperties.setProperty("msg_interval_request", msg_interval_requestCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("ntpshm_segment", ntpshm_segmentField.getText().trim());
+        configProperties.setProperty("pi_integral_const", pi_integral_constField.getText().trim());
+        configProperties.setProperty("pi_integral_exponent", pi_integral_exponentField.getText().trim());
+        configProperties.setProperty("pi_integral_norm_max", pi_integral_norm_maxField.getText().trim());
+        configProperties.setProperty("pi_integral_scale", pi_integral_scaleField.getText().trim());
+        configProperties.setProperty("pi_proportional_const", pi_proportional_constField.getText().trim());
+        configProperties.setProperty("pi_proportional_exponent", pi_proportional_exponentField.getText().trim());
+        configProperties.setProperty("pi_proportional_norm_max", pi_proportional_norm_maxField.getText().trim());
+        configProperties.setProperty("pi_proportional_scale", pi_proportional_scaleField.getText().trim());
+        configProperties.setProperty("sanity_freq_limit", sanity_freq_limitField.getText().trim());
+        configProperties.setProperty("servo_num_offset_values", servo_num_offset_valuesField.getText().trim());
+        configProperties.setProperty("servo_offset_threshold", servo_offset_thresholdField.getText().trim());
+        configProperties.setProperty("step_threshold", step_thresholdField.getText().trim());
+        configProperties.setProperty("write_phase_mode", write_phase_modeCheck.isSelected() ? "1" : "0");
+
         // Set combo box values
         String clockType = clockTypeCombo.getValue();
         if (clockType != null) {
@@ -631,35 +886,149 @@ public class PTPConfigController {
             else if (clockType.contains("P2P_TC")) configProperties.setProperty("clock_type", "P2P_TC");
             else if (clockType.contains("E2E_TC")) configProperties.setProperty("clock_type", "E2E_TC");
         }
-        
-        if (clockServoCombo.getValue() != null) {
-            configProperties.setProperty("clock_servo", clockServoCombo.getValue());
-        }
         if (networkTransportCombo.getValue() != null) {
             configProperties.setProperty("network_transport", networkTransportCombo.getValue());
-        }
-        if (timeStampingCombo.getValue() != null) {
-            configProperties.setProperty("time_stamping", timeStampingCombo.getValue());
         }
         if (delayMechanismCombo.getValue() != null) {
             configProperties.setProperty("delay_mechanism", delayMechanismCombo.getValue());
         }
-        
-        // Set checkboxes
-        configProperties.setProperty("clientOnly", clientOnlyCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("twoStepFlag", twoStepFlagCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("free_running", freeRunningCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("assume_two_step", assumeTwoStepCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("kernel_leap", kernelLeapCheck.isSelected() ? "1" : "0");
-        configProperties.setProperty("use_syslog", useSyslogCheck.isSelected() ? "1" : "0");
-        
-        outputArea.appendText("✅ Config update completed - " + configProperties.size() + " properties set\n");
-    }
+        if (timeStampingCombo.getValue() != null) {
+            configProperties.setProperty("time_stamping", timeStampingCombo.getValue());
+        }
+        if (tsproc_modeCombo.getValue() != null) {
+            configProperties.setProperty("tsproc_mode", tsproc_modeCombo.getValue());
+        }
+        if (delay_filterCombo.getValue() != null) {
+            configProperties.setProperty("delay_filter", delay_filterCombo.getValue());
+        }
+        if (clock_servoCombo.getValue() != null) {
+            configProperties.setProperty("clock_servo", clock_servoCombo.getValue());
+        }
+        if (BMCACombo.getValue() != null) {
+            configProperties.setProperty("BMCA", BMCACombo.getValue());
+        }
+        if (asCapableCombo.getValue() != null) {
+            configProperties.setProperty("asCapable", asCapableCombo.getValue());
+        }
+        if (dataset_comparisonCombo.getValue() != null) {
+            configProperties.setProperty("dataset_comparison", dataset_comparisonCombo.getValue());
+        }
 
+        // Set checkboxes
+        configProperties.setProperty("twoStepFlag", twoStepFlagCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("clientOnly", clientOnlyCheck.isSelected() ? "1" : "0");
+        configProperties.setProperty("free_running", free_runningCheck.isSelected() ? "1" : "0");
+		
+		if (e2e_transparent_clock.isSelected()) {
+        outputArea.appendText(" 'E2E Transparent Clock' is selected \n");
+        
+        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        configProperties.setProperty("priority1", "254");
+        configProperties.setProperty("free_running", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("freq_est_interval", "3");
+        configProperties.setProperty("tc_spanning_tree", "true" =="true" ? "1" : "0");
+		configProperties.setProperty("summary_interval", "1");
+        
+        // ComboBox'lar için özel mantık
+        configProperties.setProperty("clock_type", "E2E_TC");
+        configProperties.setProperty("network_transport", "L2");
+		}
+		
+		if (p2p_transparent_clock.isSelected()) {
+        outputArea.appendText(" 'P2P Transparent Clock' is selected \n");
+        
+        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        configProperties.setProperty("priority1", "254");
+        configProperties.setProperty("free_running", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("freq_est_interval", "3");
+        configProperties.setProperty("tc_spanning_tree", "true" =="true" ? "1" : "0");
+		configProperties.setProperty("summary_interval", "1");
+        
+        // ComboBox'lar için özel mantık
+        configProperties.setProperty("clock_type", "P2P_TC");
+        configProperties.setProperty("network_transport", "L2");
+		configProperties.setProperty("delay_mechanism", "P2P");
+		}
+		
+		if (g_8265_1.isSelected()) {
+        outputArea.appendText(" 'G.8265.1' is selected \n");
+        
+        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        configProperties.setProperty("serverOnly", "false" == "true" ? "1" : "0");
+		configProperties.setProperty("hybrid_e2e", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("inhibit_multicast_service", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("unicast_listen", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("unicast_req_duration", "60");
+		configProperties.setProperty("domainNumber", "4");
+		}
+		
+		if (g_8275_1.isSelected()) {
+        outputArea.appendText(" 'G.8275.1' is selected \n");
+        
+        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        configProperties.setProperty("G_8275_defaultDS_localPriorityField", "128");
+		configProperties.setProperty("maxStepsRemoved", "255");
+		configProperties.setProperty("logAnnounceInterval", "-3");
+		configProperties.setProperty("logSyncInterval", "-4");
+		configProperties.setProperty("logMinDelayReqInterval", "-4");
+		configProperties.setProperty("serverOnly", "false" == "true" ? "1" : "0");
+		configProperties.setProperty("G_8275_portDS_localPriorityField", "128");
+		configProperties.setProperty("domainNumber", "24");
+        
+        // ComboBox'lar için özel mantık
+        configProperties.setProperty("dataset_comparison", "G.8275.x");
+        configProperties.setProperty("network_transport", "L2");
+		}
+		
+		if (g_8275_2.isSelected()) {
+        outputArea.appendText(" 'G.8275.2' is selected \n");
+        
+        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        configProperties.setProperty("G_8275_defaultDS_localPriorityField", "128");
+		configProperties.setProperty("maxStepsRemoved", "255");
+		configProperties.setProperty("logAnnounceInterval", "0");
+		configProperties.setProperty("serverOnly", "false" == "true" ? "1" : "0");
+		configProperties.setProperty("G_8275_portDS_localPriorityField", "128");
+		configProperties.setProperty("hybrid_e2e", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("inhibit_multicast_service", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("unicast_listen", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("unicast_req_duration", "60");
+		configProperties.setProperty("domainNumber", "44");
+        
+        // ComboBox'lar için özel mantık
+        configProperties.setProperty("dataset_comparison", "G.8275.x");
+		}
+		
+		if (g_PTP.isSelected()) {
+        outputArea.appendText(" 'gPTP' is selected \n");
+        
+        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        configProperties.setProperty("priority1", "248");
+		configProperties.setProperty("priority2", "248");
+        configProperties.setProperty("logAnnounceInterval", "0");
+		configProperties.setProperty("logSyncInterval", "-3");
+		configProperties.setProperty("syncReceiptTimeout", "3");
+		configProperties.setProperty("neighborPropDelayThresh", "800");
+		
+		configProperties.setProperty("assume_two_step", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("path_trace_enabled", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("follow_up_info", "true" == "true" ? "1" : "0");
+		
+		
+        // ComboBox'lar için özel mantık
+        configProperties.setProperty("network_transport", "L2");
+		configProperties.setProperty("delay_mechanism", "P2P");
+		}
+		
+        outputArea.appendText("✅ Config update completed - " + configProperties.size() + " properties set\n");
+		
+		
+	
+	}
     @FXML
     private void startPTP() {
         outputArea.appendText("\n=== START PTP4L COMMAND ===\n");
-        
+
         if (isRunning) {
             outputArea.appendText("❌ PTP is already running\n");
             showAlert("PTP is already running", "Please stop the current process first.");
@@ -668,7 +1037,7 @@ public class PTPConfigController {
 
         outputArea.appendText("🔧 Building PTP command...\n");
         List<String> command = buildPTPCommand();
-        
+
         if (command.isEmpty()) {
             outputArea.appendText("❌ Failed to build command - invalid configuration\n");
             showAlert("Invalid Configuration", "Please check your configuration settings.");
@@ -686,16 +1055,16 @@ public class PTPConfigController {
             outputArea.appendText("🔄 Executing via SSH: " + sshManager.getConnectionInfo() + "\n");
             outputArea.appendText("📤 SSH Command: " + sshCommand + "\n");
             outputArea.appendText("--- SSH Output Start ---\n");
-            
+
             sshManager.executeCommandWithLiveOutput(sshCommand, output -> {
                 outputArea.appendText("📥 " + output);
                 outputArea.setScrollTop(Double.MAX_VALUE);
             });
-            
+
         } else if (isSSHEnabled && !sshManager.isConnected()) {
             showAlert("SSH Not Connected", "Please connect to the remote host first.");
             return;
-            
+
         } else {
             // Run locally
             CompletableFuture.runAsync(() -> {
@@ -759,12 +1128,12 @@ public class PTPConfigController {
 
     private List<String> buildPTPCommand() {
         List<String> command = new ArrayList<>();
-        
+
         // Add sudo if enabled
         if (useSudoCheck.isSelected()) {
             command.add("sudo");
         }
-        
+
         command.add("ptp4l");
 
         // Add configuration file if specified
@@ -815,7 +1184,7 @@ public class PTPConfigController {
         boolean canStart = !isRunning && (!isSSHEnabled || sshManager.isConnected());
         startButton.setDisable(!canStart);
         stopButton.setDisable(!isRunning);
-        
+
         // Disable PTP controls when SSH is enabled but not connected
         if (isSSHEnabled && !sshManager.isConnected()) {
             startButton.setDisable(true);
@@ -833,4 +1202,71 @@ public class PTPConfigController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-} 
+
+    public void setInfo(Label icon, String message) {
+        // Popup içeriği
+        VBox popupContent = new VBox();
+        popupContent.setStyle("-fx-background-color: white; -fx-border-color: #aaa; -fx-border-radius: 5; -fx-background-radius: 5;");
+        popupContent.setPadding(new Insets(10));
+        popupContent.setSpacing(5);
+
+        Text infoText = new Text(message);
+        infoText.setStyle("-fx-font-size: 13;");
+        popupContent.getChildren().add(infoText);
+
+        popup.getContent().add(popupContent);
+        popup.setAutoHide(true);  // başka bir yere tıklanırsa kapanır
+
+        // Göster
+        icon.setOnMouseEntered((MouseEvent e) -> {
+            if (!popup.isShowing()) {
+                popup.show(icon.getScene().getWindow(), e.getScreenX() + 10, e.getScreenY() + 10);
+            }
+        });
+
+        // İkonu terk edince popup'ı gizle
+        icon.setOnMouseExited((MouseEvent e) -> {
+            popup.hide();
+        });
+
+        // Eğer mouse popup üzerine giderse, kapanmasın (ekstra)
+        popupContent.setOnMouseEntered(e -> popup.show(icon.getScene().getWindow()));
+        popupContent.setOnMouseExited(e -> popup.hide());
+    }
+
+    /**
+     * Bir konteyner içindeki tüm tooltip'leri, onların görsel bileşenlerini
+     * oluşturmaya zorlayarak "önceden ısıtır". Bu işlem, her tooltip için
+     * yaşanan tek seferlik takılmayı ortadan kaldırır.
+     */
+    private void prewarmAllTooltips(Parent parent){
+        for(Node node:parent.getChildrenUnmodifiable()){
+            Tooltip tooltip=null;
+            if(node instanceof Labeled){
+                tooltip=((Labeled)node).getTooltip();
+            }
+            if(tooltip!=null&&node.getScene()!=null&&node.getScene().getWindow()!=null){
+                try{
+                    final Window owner=node.getScene().getWindow();
+                    tooltip.show(owner,-1000,-1000);
+                    tooltip.hide();
+                }catch(Exception e){
+                    // Hata durumunda sessiz kal
+                }
+            }
+
+            // Düzeltilmiş ve Geliştirilmiş Recursive (Özyinelemeli) Çağrı
+            if (node instanceof TabPane) {
+                for (Tab tab : ((TabPane) node).getTabs()) {
+                    if (tab.getContent() instanceof Parent) {
+                        prewarmAllTooltips((Parent) tab.getContent());
+                    }
+                }
+            }
+            else if(node instanceof Parent){
+                prewarmAllTooltips((Parent)node); // Hata düzeltildi: `parent` yerine `node` kullanılıyor.
+            }
+        }
+    }
+	
+}

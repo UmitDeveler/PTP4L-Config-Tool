@@ -4,424 +4,1179 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.ptpapp.PTPConfigController" spacing="10" styleClass="main-container">
-
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-
-    <!-- Header -->
-    <HBox alignment="CENTER" styleClass="header">
-        <Label text="PTP4L Configuration Tool" styleClass="header-label"/>
-    </HBox>
-
-    <!-- SSH Connection Section -->
-    <TitledPane text="Remote Connection (SSH)" expanded="true" styleClass="section-pane">
-        <VBox spacing="10">
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <CheckBox fx:id="enableSSHCheck" text="Enable SSH Connection"/>
-                <Label fx:id="connectionStatusLabel" text="Local mode" styleClass="connection-status"/>
-            </HBox>
-            
-            <GridPane hgap="10" vgap="8">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="NEVER" minWidth="120" prefWidth="150"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="250"/>
-                    <ColumnConstraints hgrow="NEVER" minWidth="80" prefWidth="100"/>
-                </columnConstraints>
-                
-                <Label text="Hostname:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <TextField fx:id="sshHostField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
-                          promptText="e.g., 192.168.1.100"/>
-                <TextField fx:id="sshPortField" GridPane.columnIndex="2" GridPane.rowIndex="0" 
-                          promptText="Port" text="22"/>
-                
-                <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <TextField fx:id="sshUsernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
-                          promptText="SSH username"/>
-                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                
-                <Label text="Authentication:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <CheckBox fx:id="useSSHKeyCheck" text="Use SSH Key" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                
-                <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                <PasswordField fx:id="sshPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="3" 
-                              promptText="SSH password"/>
-                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-                
-                <Label text="SSH Key:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                <TextField fx:id="sshKeyPathField" GridPane.columnIndex="1" GridPane.rowIndex="4" 
-                          promptText="Path to private key"/>
-                <Button fx:id="browseKeyButton" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-                
-                <Label text="Key Passphrase:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                <PasswordField fx:id="sshKeyPassphraseField" GridPane.columnIndex="1" GridPane.rowIndex="5" 
-                              promptText="Key passphrase (optional)"/>
-                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-                
-                <Label text="Remote Config Path:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                <TextField fx:id="remoteConfigPathField" GridPane.columnIndex="1" GridPane.rowIndex="6" 
-                          promptText="e.g., /etc/ptp4l.conf"/>
-                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
-            </GridPane>
-            
-            <HBox spacing="10" alignment="CENTER">
-                <Button fx:id="connectSSHButton" text="Connect" styleClass="connect-button"/>
-                <Button fx:id="disconnectSSHButton" text="Disconnect" styleClass="disconnect-button"/>
-            </HBox>
-        </VBox>
-    </TitledPane>
-
-    <!-- Configuration Tabs -->
-    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
-        
-        <!-- Global Options Tab -->
-        <Tab text="Global Options">
-            <ScrollPane fitToWidth="true">
-                <VBox spacing="15" styleClass="content-container">
-                    <padding>
-                        <Insets top="15" right="15" bottom="15" left="15"/>
-                    </padding>
-                    
-                    <!-- Clock Configuration -->
-                    <TitledPane text="Clock Configuration" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <GridPane hgap="10" vgap="8">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
-                                </columnConstraints>
-                                
-                                <Label text="Clock Type:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <ComboBox fx:id="clockTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" 
-                                         promptText="Select clock type" maxWidth="Infinity"/>
-                                
-                                <Label text="Domain Number:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                <TextField fx:id="domainNumberField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
-                                          promptText="0-255 (default: 0)"/>
-                                
-                                <Label text="Priority 1:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                <TextField fx:id="priority1Field" GridPane.columnIndex="1" GridPane.rowIndex="2" 
-                                          promptText="0-255 (default: 128)"/>
-                                
-                                <Label text="Priority 2:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                                <TextField fx:id="priority2Field" GridPane.columnIndex="1" GridPane.rowIndex="3" 
-                                          promptText="0-255 (default: 128)"/>
-                                
-                                <Label text="Clock Class:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                                <TextField fx:id="clockClassField" GridPane.columnIndex="1" GridPane.rowIndex="4" 
-                                          promptText="0-255 (default: 248)"/>
-                                
-                                <Label text="Clock Accuracy:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                                <TextField fx:id="clockAccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="5" 
-                                          promptText="Hex value (default: 0xFE)"/>
-                            </GridPane>
-                        </VBox>
-                    </TitledPane>
-                    
-                    <!-- Servo Configuration -->
-                    <TitledPane text="Servo Configuration" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <GridPane hgap="10" vgap="8">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
-                                </columnConstraints>
-                                
-                                <Label text="Clock Servo:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <ComboBox fx:id="clockServoCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" 
-                                         promptText="Select servo type" maxWidth="Infinity"/>
-                                
-                                <Label text="Step Threshold:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                <TextField fx:id="stepThresholdField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
-                                          promptText="Seconds (default: 0.0)"/>
-                                
-                                <Label text="First Step Threshold:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                <TextField fx:id="firstStepThresholdField" GridPane.columnIndex="1" GridPane.rowIndex="2" 
-                                          promptText="Seconds (default: 0.00002)"/>
-                                
-                                <Label text="Max Frequency:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                                <TextField fx:id="maxFrequencyField" GridPane.columnIndex="1" GridPane.rowIndex="3" 
-                                          promptText="PPB (default: 900000000)"/>
-                            </GridPane>
-                        </VBox>
-                    </TitledPane>
-                    
-                    <!-- Global Flags -->
-                    <TitledPane text="Global Flags" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <HBox spacing="20">
-                                <CheckBox fx:id="clientOnlyCheck" text="Client Only"/>
-                                <CheckBox fx:id="twoStepFlagCheck" text="Two Step Flag"/>
-                                <CheckBox fx:id="freeRunningCheck" text="Free Running"/>
-                            </HBox>
-                            <HBox spacing="20">
-                                <CheckBox fx:id="assumeTwoStepCheck" text="Assume Two Step"/>
-                                <CheckBox fx:id="kernelLeapCheck" text="Kernel Leap"/>
-                                <CheckBox fx:id="useSyslogCheck" text="Use Syslog"/>
-                            </HBox>
-                        </VBox>
-                    </TitledPane>
-                </VBox>
-            </ScrollPane>
-        </Tab>
-        
-        <!-- Port Options Tab -->
-        <Tab text="Port Options">
-            <ScrollPane fitToWidth="true">
-                <VBox spacing="15" styleClass="content-container">
-                    <padding>
-                        <Insets top="15" right="15" bottom="15" left="15"/>
-                    </padding>
-                    
-                    <!-- Network Transport -->
-                    <TitledPane text="Network Transport" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <GridPane hgap="10" vgap="8">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
-                                </columnConstraints>
-                                
-                                <Label text="Network Transport:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <ComboBox fx:id="networkTransportCombo" GridPane.columnIndex="1" GridPane.rowIndex="0" 
-                                         promptText="Select transport" maxWidth="Infinity"/>
-                                
-                                <Label text="Time Stamping:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                <ComboBox fx:id="timeStampingCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" 
-                                         promptText="Select time stamping" maxWidth="Infinity"/>
-                                
-                                <Label text="Delay Mechanism:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                <ComboBox fx:id="delayMechanismCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" 
-                                         promptText="Select delay mechanism" maxWidth="Infinity"/>
-                            </GridPane>
-                        </VBox>
-                    </TitledPane>
-
-
-                    <!-- Timing Intervals -->
-                    <TitledPane text="Timing Intervals" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <GridPane hgap="10" vgap="8">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
-                                </columnConstraints>
-
-                                <Label text="Log Announce Interval:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <TextField fx:id="logAnnounceIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
-                                          promptText="Power of 2 in seconds (default: 1)"/>
-
-                                <Label text="Log Sync Interval:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                <TextField fx:id="logSyncIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Oper Log Sync Interval:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                <TextField fx:id="operLogSyncInterval" GridPane.columnIndex="1" GridPane.rowIndex="2" 
-                                          promptText="Power of 2 in seconds (default: 1)"/>
-                                
-                                <Label text="Log Min Delay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                                <TextField fx:id="logMinDelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="3" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-                                
-                                <Label text="Log Min Pdelay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                                <TextField fx:id="logMinPdelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="4" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Oper Log Pdelay Req Interval:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                                <TextField fx:id="operLogPdelayReqInterval" GridPane.columnIndex="1" GridPane.rowIndex="5" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Announce Receipt Timeout:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                                <TextField fx:id="announceReceiptTimeout" GridPane.columnIndex="1" GridPane.rowIndex="6" 
-                                          promptText="Power of 2 in seconds (default: 3)"/>
-
-                                <Label text="Sync Receipt Timeout:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-                                <TextField fx:id="syncReceiptTimeout" GridPane.columnIndex="1" GridPane.rowIndex="7" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Delay Response Timeout:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-                                <TextField fx:id="delay_response_timeout" GridPane.columnIndex="1" GridPane.rowIndex="8" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Delay Asymmetry:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-                                <TextField fx:id="delayAsymmetryField" GridPane.columnIndex="1" GridPane.rowIndex="9" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Fault Reset Interval:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
-                                <TextField fx:id="fault_reset_interval" GridPane.columnIndex="1" GridPane.rowIndex="10" 
-                                          promptText="Power of 2 in seconds (default: 4)"/>
-
-                                <Label text="Neighbor Prop Delay Thresh:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
-                                <TextField fx:id="neighborPropDelayThresh" GridPane.columnIndex="1" GridPane.rowIndex="11" 
-                                          promptText="Power of 2 in seconds (default: 200000000)"/>
-
-                                <Label text="Server Only:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
-                                <TextField fx:id="serverOnly" GridPane.columnIndex="1" GridPane.rowIndex="12" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="G.8275.portDS Local Priority:" GridPane.columnIndex="0" GridPane.rowIndex="13"/>
-                                <TextField fx:id="G_8275_portDS_localPriority" GridPane.columnIndex="1" GridPane.rowIndex="13" 
-                                          promptText="Power of 2 in seconds (default: 128)"/>
-
-                                <Label text="Allowed Lost Responses:" GridPane.columnIndex="0" GridPane.rowIndex="14"/>
-                                <TextField fx:id="allowedLostResponses" GridPane.columnIndex="1" GridPane.rowIndex="14" 
-                                          promptText="Power of 2 in seconds (default: 3)"/>
-
-                                <Label text="As Capable:" GridPane.columnIndex="0" GridPane.rowIndex="15"/>
-                                <TextField fx:id="asCapable" GridPane.columnIndex="1" GridPane.rowIndex="15" 
-                                          promptText="Power of 2 in seconds (default: auto)"/>
-
-                                <Label text="BMCA:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
-                                <TextField fx:id="BMCA" GridPane.columnIndex="1" GridPane.rowIndex="16" 
-                                          promptText="Power of 2 in seconds (default: ptp)"/>
-
-                                <Label text="Inhibit Announce:" GridPane.columnIndex="0" GridPane.rowIndex="17"/>
-                                <TextField fx:id="inhibit_announce" GridPane.columnIndex="1" GridPane.rowIndex="17" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Inhibit Delay Req:" GridPane.columnIndex="0" GridPane.rowIndex="18"/>
-                                <TextField fx:id="inhibit_delay_req" GridPane.columnIndex="1" GridPane.rowIndex="18" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Ignore Source ID:" GridPane.columnIndex="0" GridPane.rowIndex="19"/>
-                                <TextField fx:id="ignore_source_id" GridPane.columnIndex="1" GridPane.rowIndex="19" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Power Profile 2011 Grandmaster Time Inaccuracy:" GridPane.columnIndex="0" GridPane.rowIndex="20"/>
-                                <TextField fx:id="power_profile_2011_grandmasterTimeInaccuracy" GridPane.columnIndex="1" GridPane.rowIndex="20" 
-                                          promptText="Power of 2 in seconds (default: -1)"/>
-
-                                <Label text="Power Profile 2011 Network Time Inaccuracy:" GridPane.columnIndex="0" GridPane.rowIndex="21"/>
-                                <TextField fx:id="power_profile_2011_networkTimeInaccuracy" GridPane.columnIndex="1" GridPane.rowIndex="21" 
-                                          promptText="Power of 2 in seconds (default: -1)"/>
-
-                                <Label text="Power Profile 2017 Total Time Inaccuracy:" GridPane.columnIndex="0" GridPane.rowIndex="22"/>
-                                <TextField fx:id="power_profile_2017_totalTimeInaccuracy" GridPane.columnIndex="1" GridPane.rowIndex="22" 
-                                          promptText="Power of 2 in seconds (default: -1)"/>
-
-                                <Label text="Power Profile Grandmaster ID:" GridPane.columnIndex="0" GridPane.rowIndex="23"/>
-                                <TextField fx:id="power_profile_grandmasterID" GridPane.columnIndex="1" GridPane.rowIndex="23" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-
-                                <Label text="Power Profile Version:" GridPane.columnIndex="0" GridPane.rowIndex="24"/>
-                                <TextField fx:id="power_profile_version" GridPane.columnIndex="1" GridPane.rowIndex="24" 
-                                          promptText="Power of 2 in seconds (default: none)"/>
-
-                                <Label text="PTP Minor Version:" GridPane.columnIndex="0" GridPane.rowIndex="25"/>
-                                <TextField fx:id="ptp_minor_version" GridPane.columnIndex="1" GridPane.rowIndex="25" 
-                                          promptText="Power of 2 in seconds (default: 1)"/>
-
-                                <Label text="SPP:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
-                                <TextField fx:id="spp" GridPane.columnIndex="1" GridPane.rowIndex="16" 
-                                          promptText="Power of 2 in seconds (default: -1)"/>
-
-                                <Label text="Active Key ID:" GridPane.columnIndex="0" GridPane.rowIndex="16"/>
-                                <TextField fx:id="active_key_id" GridPane.columnIndex="1" GridPane.rowIndex="16" 
-                                          promptText="Power of 2 in seconds (default: 0)"/>
-                            </GridPane>
-                        </VBox>
-                    </TitledPane>
-                    
-                    <!-- Port Delays -->
-                    <TitledPane text="Port Delays and Latencies" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <GridPane hgap="10" vgap="8">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
-                                </columnConstraints>
-                                
-                                <Label text="Ingress Latency:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <TextField fx:id="ingressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
-                                          promptText="Nanoseconds (default: 0)"/>
-                                
-                                <Label text="Egress Latency:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                <TextField fx:id="egressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="1" 
-                                          promptText="Nanoseconds (default: 0)"/>
-                            </GridPane>
-                        </VBox>
-                    </TitledPane>
-                </VBox>
-            </ScrollPane>
-        </Tab>
-        
-        <!-- Interface & Execution Tab -->
-        <Tab text="Interface &amp; Execution">
-            <ScrollPane fitToWidth="true">
-                <VBox spacing="15" styleClass="content-container">
-                    <padding>
-                        <Insets top="15" right="15" bottom="15" left="15"/>
-                    </padding>
-                    
-                    <!-- Interface Configuration -->
-                    <TitledPane text="Interface Configuration" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <GridPane hgap="10" vgap="8">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
-                                </columnConstraints>
-                                
-                                <Label text="Interface Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <TextField fx:id="interfaceNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
-                                          promptText="e.g., eth0, enp0s3"/>
-                            </GridPane>
-                        </VBox>
-                    </TitledPane>
-                    
-                    <!-- Master/Slave Configuration -->
-                    <TitledPane text="Master/Slave Configuration" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <CheckBox fx:id="masterModeCheck" text="Master Mode (checked: -m only, unchecked: -m -s)"/>
-                            <Label text="Note: When checked, runs as master (-m). When unchecked, runs as slave (-m -s)." 
-                                   style="-fx-font-style: italic; -fx-text-fill: #666666;"/>
-                        </VBox>
-                    </TitledPane>
-                    
-                    <!-- Execution Options -->
-                    <TitledPane text="Execution Options" expanded="true" styleClass="section-pane">
-                        <VBox spacing="10">
-                            <HBox spacing="20">
-                                <CheckBox fx:id="useSudoCheck" text="Use Sudo"/>
-                                <CheckBox fx:id="verboseCheck" text="Verbose (-v)"/>
-                                <CheckBox fx:id="quietCheck" text="Quiet (-q)"/>
-                            </HBox>
-                            <GridPane hgap="10" vgap="8">
-                                <columnConstraints>
-                                    <ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
-                                </columnConstraints>
-                                
-                                <Label text="Print Level:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                <TextField fx:id="printLevelField" GridPane.columnIndex="1" GridPane.rowIndex="0" 
-                                          promptText="0-6 (default: 6)"/>
-                            </GridPane>
-                        </VBox>
-                    </TitledPane>
-                </VBox>
-            </ScrollPane>
-        </Tab>
-        
-    </TabPane>
-
-    <!-- Save Configuration and Control Buttons -->
-    <HBox spacing="10" alignment="CENTER" styleClass="control-buttons">
-        <Button fx:id="saveConfigButton" text="Save &amp; Upload Config" styleClass="save-button"/>
-        <Button fx:id="startButton" text="Start PTP4L" styleClass="start-button"/>
-        <Button fx:id="stopButton" text="Stop PTP4L" styleClass="stop-button"/>
-        <Button fx:id="clearButton" text="Clear Output" styleClass="clear-button"/>
-    </HBox>
-
-    <!-- Output Section -->
-    <TitledPane text="Output" expanded="true" styleClass="section-pane">
-        <VBox spacing="5">
-            <TextArea fx:id="outputArea" promptText="PTP4L output will appear here..."
-                      VBox.vgrow="ALWAYS" styleClass="output-area" prefRowCount="10"/>
-        </VBox>
-    </TitledPane>
-
-</VBox> 
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ptpapp.PTPConfigController" fx:id="mainContainer" spacing="10" styleClass="main-container">
+	<padding>
+		<Insets top="20" right="20" bottom="20" left="20"/>
+	</padding>
+	<HBox alignment="CENTER" styleClass="header">
+		<Label text="PTP4L Configuration Tool" styleClass="header-label"/>
+	</HBox>
+	<TitledPane text="Remote Connection (SSH)" expanded="true" styleClass="section-pane">
+		<VBox spacing="10">
+			<HBox spacing="10" alignment="CENTER_LEFT">
+				<CheckBox fx:id="enableSSHCheck" text="Enable SSH Connection"/>
+				<Label fx:id="connectionStatusLabel" text="Local mode" styleClass="connection-status"/>
+			</HBox>
+			<GridPane hgap="10" vgap="8">
+				<columnConstraints>
+					<ColumnConstraints hgrow="NEVER" minWidth="120" prefWidth="150"/>
+					<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="250"/>
+					<ColumnConstraints hgrow="NEVER" minWidth="80" prefWidth="100"/>
+				</columnConstraints>
+				<Label text="Hostname:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+				
+				<TextField fx:id="sshHostField" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="e.g., 192.168.1.100"/>
+				<TextField fx:id="sshPortField" GridPane.columnIndex="2" GridPane.rowIndex="0" promptText="Port" text="22"/>
+				
+				<Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+				<TextField fx:id="sshUsernameField" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="SSH username"/>
+				<Label text="" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+				
+				<Label text="Authentication:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+				<CheckBox fx:id="useSSHKeyCheck" text="Use SSH Key" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+				<Label text="" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+				
+				<Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+				<PasswordField fx:id="sshPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="SSH password"/>
+				<Label text="" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+				
+				<Label text="SSH Key:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+				<TextField fx:id="sshKeyPathField" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="Path to private key"/>
+				<Button fx:id="browseKeyButton" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+				
+				<Label text="Key Passphrase:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+				<PasswordField fx:id="sshKeyPassphraseField" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="Key passphrase (optional)"/>
+				<Label text="" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+				
+				<Label text="Remote Config Path:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+				<TextField fx:id="remoteConfigPathField" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="e.g., /etc/ptp4l.conf"/>
+				<Label text="" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+			</GridPane>
+			<HBox spacing="10" alignment="CENTER">
+				<Button fx:id="connectSSHButton" text="Connect" styleClass="connect-button"/>
+				<Button fx:id="disconnectSSHButton" text="Disconnect" styleClass="disconnect-button"/>
+			</HBox>
+		</VBox>
+	</TitledPane>
+	<TitledPane text="Configuration Options" expanded="false" styleClass="section-pane">
+		<VBox spacing="10">
+			<TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+			    <Tab text="Profiles">
+					<ScrollPane fitToWidth="true">
+						<VBox spacing="15" styleClass="content-container" alignment="CENTER">
+							<padding>
+								<Insets top="15" right="15" bottom="15" left="15"/>
+							</padding>
+							<GridPane hgap="10" vgap="8">
+								<columnConstraints>
+									<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+									<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+									<ColumnConstraints hgrow="SOMETIMES"/>
+								</columnConstraints>
+								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="0">
+									<Label text="E2E Transparent Clock:"/>
+									<Label fx:id="clockTypeInfo" text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="End-to-End Transparent Clock example configuration containing those attributes which differ from the defaults." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="e2e_transparent_clock" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="0">
+									<Label text="P2P Transparent Clock:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Peer to Peer Transparent Clock example configuration containing those attributes which differ from the defaults." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="p2p_transparent_clock" text="" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="0">
+									<Label text="G.8265.1:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Telecom G.8265.1 example configuration containing those attributes which either differ from the default configuration or are relevant to the profile." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="g_8265_1" text="" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="0">
+									<Label text="G.8275.1:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Telecom G.8275.1 example configuration containing those attributes which either differ from the default configuration or are relevant to the profile." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="g_8275_1" text="" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="5" GridPane.columnIndex="0">
+									<Label text="G.8275.2:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Telecom G.8275.2 example configuration containing those attributes which either differ from the default configuration or are relevant to the profile." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="g_8275_2" text="" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="6" GridPane.columnIndex="0">
+									<Label text="gPTP:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="802.1AS example configuration containing those attributes which differ from the default configuration." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="g_PTP" text="" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+							</GridPane>
+						</VBox>
+					</ScrollPane>
+				</Tab>
+				<Tab text="Default Program and Clock Options" fx:id="defaultOptionsTab">
+					<ScrollPane fitToWidth="true">
+						<VBox spacing="15" styleClass="content-container">
+							<padding>
+								<Insets top="15" right="15" bottom="15" left="15"/>
+							</padding>
+							<GridPane hgap="10" vgap="8">
+								<columnConstraints>
+									<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+									<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+								</columnConstraints>
+								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+									<Label text="Client Only:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The local clock is a client-only clock if enabled (1)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="clientOnlyCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+									<Label text="Clock Accuracy:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Used in the PTP server selection algorithm." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="clockAccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Hex value (default: 0xFE)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+									<Label text="Clock Class:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Denotes the traceability of the time distributed by the grandmaster clock." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="clockClassField" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="0-255 (default: 248)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+									<Label text="Dataset Comparison:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the method used when comparing data sets during the Best Master Clock Algorithm. Possible values are ieee1588 and G.8275.x." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="dataset_comparisonCombo" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="Select dataset comparison" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
+									<Label text="Domain Number:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The domain attribute of the local clock." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="domainNumberField" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="0-255 (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="6">
+									<Label text="DSCP Event:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Defines the Differentiated Services Codepoint (DSCP) to be used for PTP event messages. There are several media streaming standards that require specific values for this option." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="dscp_eventField" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="0-63 (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="7">
+									<Label text="DSCP General:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Defines the Differentiated Services Codepoint (DSCP) to be used for PTP general messages. There are several media streaming standards that recommend specific values for this option." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="dscp_generalField" GridPane.columnIndex="1" GridPane.rowIndex="7" promptText="0-63 (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="8">
+									<Label text="Free Running:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: Don’t adjust the local clock (enabled). 0: Disabled." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="free_runningCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="9">
+									<Label text="Freq Est Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The time interval over which is estimated the ratio of the local and peer clock frequencies. It is specified as a power of two in seconds. The default is 2 seconds (1)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="freq_est_intervalField" GridPane.columnIndex="1" GridPane.rowIndex="9" promptText="0-255 (default: 1)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="10">
+									<Label text="G.8275.defaultDS.localPriority:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The Telecom profiles (ITU-T G.8275.1 and G.8275.2) specify an alternate Best Master Clock Algorithm with a unique data set comparison algorithm. The value of this option is associated with the local clock and is used as a tie breaker whenever clockClass, clockAccuracy, offsetScaledLogVariance, and priority2 are equal. This option is only used when dataset_comparison is set to G.8275.x." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="G_8275_defaultDS_localPriorityField" GridPane.columnIndex="1" GridPane.rowIndex="10" promptText="0-255 (default: 128)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="11">
+									<Label text="Max Steps Removed:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="When using this option, if the value of stepsRemoved of an Announce message is greater than or equal to the value of maxStepsRemoved the Announce message is not considered in the operation of the BMCA." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="maxStepsRemovedField" GridPane.columnIndex="1" GridPane.rowIndex="11" promptText="0-255 (default: 128)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="12">
+									<Label text="Offset Scaled Log Variance:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Characterizes the stability of the clock." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="offsetScaledLogVarianceField" GridPane.columnIndex="1" GridPane.rowIndex="12" promptText="Hex value (default: 0xFFFF)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="13">
+									<Label text="Priority 1:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The priority1 attribute of the local clock used in the PTP server selection algorithm, lower values take precedence." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="priority1Field" GridPane.columnIndex="1" GridPane.rowIndex="13" promptText="0-255 (default: 128)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="14">
+									<Label text="Priority 2:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The priority2 attribute of the local clock used in the PTP server selection algorithm, lower values take precedence." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="priority2Field" GridPane.columnIndex="1" GridPane.rowIndex="14" promptText="0-255 (default: 128)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="15">
+									<Label text="Socket Priority:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Configure the SO_PRIORITY of sockets to route ptp4l traffic using Linux qdiscs for traffic shaping. This option is only available with the IEEE 802.3 transport and is silently ignored when using UDP." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="socket_priorityField" GridPane.columnIndex="1" GridPane.rowIndex="15" promptText="0-15 (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="16">
+									<Label text="Two Step Flag:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: Enable two-step mode for sync messages. 0: One-step mode can be used only with hardware time stamping." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="twoStepFlagCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="16"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="17">
+									<Label text="UTC Offset:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The current offset between TAI and UTC." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="utc_offsetField" GridPane.columnIndex="1" GridPane.rowIndex="17" promptText="0-255 (default: 37)"/>
+							</GridPane>
+						</VBox>
+					</ScrollPane>
+				</Tab>
+				<Tab text="Port Options" fx:id="portOptionsTab">
+					<ScrollPane fitToWidth="true">
+						<VBox spacing="15" styleClass="content-container">
+							<padding>
+								<Insets top="15" right="15" bottom="15" left="15"/>
+							</padding>
+							<GridPane hgap="10" vgap="8">
+								<columnConstraints>
+									<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+									<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+								</columnConstraints>
+								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+									<Label text="Announce Receipt Timeout:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="	The number of missed Announce messages before the last Announce messages expires." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="announceReceiptTimeoutField" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="(default: 3)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+									<Label text="As Capable:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="true: all the checks which can unset asCapable variable (as described in Section 10.2.4.1 of 802.1AS) are skipped. auto: asCapable is initialized to false and will be set to true after the relevant checks have passed." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="asCapableCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Select As Capable" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+									<Label text="BMCA:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Enables use of static roles for server and client devices instead of running the BMCA algorithm. This can speed up start time when you know the roles of the devices. noop: the traditional BMCA algorithm used by 1588 is skipped. masterOnly and clientOnly will be used to determine the role for the device. ptp: runs the BMCA-related state machines." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="BMCACombo" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="Select BMCA" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+									<Label text="Delay Asymmetry:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The time difference in nanoseconds of the transmit and receive paths. This value should be positive when the server-to-client propagation time is longer and negative when the client-to-server time is longer." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="delayAsymmetryField" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="(default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
+									<Label text="Delay Response Timeout:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The number of delay response messages that may go missing before triggering a synchronization fault. 0: disable the delay response timeout." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="delay_response_timeoutField" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="(default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="6">
+									<Label text="Fault Reset Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The time in seconds between the detection of a port’s fault and the fault being reset, expressed as a power of two. The default is 16 seconds (4).-128 or ASAP: reset the fault immediately." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="fault_reset_intervalField" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="Power of 2 in seconds (default: 4)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="7">
+									<Label text="G.8275.portDS Local Priority:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The value is associated with Announce messages arriving on a particular port and is used as a tie breaker whenever clockClass, clockAccuracy, offsetScaledLogVariance, and priority2 are equal. Only used when dataset_comparison is set to G.8275.x." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="G_8275_portDS_localPriorityField" GridPane.columnIndex="1" GridPane.rowIndex="7" promptText="0-255 (default: 128)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="8">
+									<Label text="Inhibit Announce:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Disable the timer for announce messages and the announce message timeout timer. Used by the Automotive profile when switching over to a static BMCA. 1: If this option is enabled, ignore_source_id has to be enabled in the client because it has no way to identify the server in the Sync and Follow_Up messages." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="inhibit_announceCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="9">
+									<Label text="Inhibit Delay Req:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Don’t send any delay requests. 1: will need the asCapable option to be set to true. This is useful when running as a designated server who does not need to calculate offset from client." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="inhibit_delay_reqCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="10">
+									<Label text="Ignore Source ID:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: disables source port identity checking for Sync and Follow_Up messages. This is useful when announce messages are disabled in the server and the client does not have any way to know the server’s identity." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="ignore_source_idCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="11">
+									<Label text="Log Announce Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The mean time interval between Announce messages, specified as a power of two in seconds. A shorter interval makes ptp4l react faster to changes in the client/server hierarchy. The interval should be the same in the whole domain. The default is 2 seconds (1)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="logAnnounceIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="11" promptText="Power of 2 in seconds (default: 1)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="12">
+									<Label text="Log Min Delay Req Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The minimum permitted mean time interval between Delay_Req messages, specified as a power of two in seconds. A shorter interval makes ptp4l react faster to the changes in the path delay. The default is 1 second (0)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="logMinDelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="12" promptText="Power of 2 in seconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="13">
+									<Label text="Log Min Pdelay Req Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The minimum permitted mean time interval between Pdelay_Req messages, specified as a power of two in seconds. The default is 1 second (0)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="logMinPdelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="13" promptText="Power of 2 in seconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="14">
+									<Label text="Log Sync Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The mean time interval between Sync messages, specified as a power of two in seconds. A shorter interval may improve accuracy of the local clock. The default is 1 second (0)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="logSyncIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="14" promptText="Power of 2 in seconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="15">
+									<Label text="Neighbor Prop Delay Thresh:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Upper limit for peer delay in nanoseconds. If the estimated peer delay is greater than this value the port is marked as not 802.1AS capable." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="neighborPropDelayThreshField" GridPane.columnIndex="1" GridPane.rowIndex="15" promptText="(default: 200000000)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="16">
+									<Label text="Oper Log Pdelay Req Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The Pdelay Request messages interval used once the clock enters the SERVO_LOCKED_STABLE state. If msg_interval_request is set, the local client port will adopt this rate when the local clock enters the locked stable state. This option is specified as a power of two in seconds, and the default value is 1 second (0)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="operLogPdelayReqIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="16" promptText="Power of 2 in seconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="17">
+									<Label text="Oper Log Sync Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The Sync message interval to be requested once the clock enters the SERVO_LOCKED_STABLE state. If msg_interval_request is set, the local client port will request the remote server to switch to the given message rate via a signaling message containing a Message interval request TLV. This option is specified as a power of two in seconds, and default value is 1 second (0)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="operLogSyncIntervalField" GridPane.columnIndex="1" GridPane.rowIndex="17" promptText="Power of 2 in seconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="18">
+									<Label text="Server Only:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: prevents the port from entering the client state and the local clock will ignore Announce messages received on this port. Supports the Telecom Profiles according to ITU-T G.8265.1, G.8275.1, and G.8275.2." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="serverOnlyCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="18"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="19">
+									<Label text="Sync Receipt Timeout:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The number of sync/follow up messages that may go missing before triggering a Best Master Clock election. Used for running in gPTP mode according to the 802.1AS-2011 standard. 0: disable the sync message timeout." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="syncReceiptTimeoutField" GridPane.columnIndex="1" GridPane.rowIndex="19" promptText="Power of 2 in seconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="20">
+									<Label text="Allowed Lost Responses:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="allowedLostResponsesField" GridPane.columnIndex="1" GridPane.rowIndex="20" promptText="Power of 2 in seconds (default: 3)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="21">
+									<Label text="Power Profile 2011 Grandmaster Time Inaccuracy:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="power_profile_2011_grandmasterTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="21" promptText="Power of 2 in seconds (default: -1)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="22">
+									<Label text="Power Profile 2011 Network Time Inaccuracy:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="power_profile_2011_networkTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="22" promptText="Power of 2 in seconds (default: -1)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="23">
+									<Label text="Power Profile 2017 Total Time Inaccuracy:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="power_profile_2017_totalTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="23" promptText="Power of 2 in seconds (default: -1)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="24">
+									<Label text="Power Profile Grandmaster ID:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="power_profile_grandmasterIDField" GridPane.columnIndex="1" GridPane.rowIndex="24" promptText="Power of 2 in seconds (default: 0)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="25">
+									<Label text="Power Profile Version:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="power_profile_versionField" GridPane.columnIndex="1" GridPane.rowIndex="25" promptText="Power of 2 in seconds (default: none)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="26">
+									<Label text="PTP Minor Version:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="ptp_minor_versionField" GridPane.columnIndex="1" GridPane.rowIndex="26" promptText="Power of 2 in seconds (default: 1)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="27">
+									<Label text="SPP:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="sppField" GridPane.columnIndex="1" GridPane.rowIndex="27" promptText="Power of 2 in seconds (default: -1)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="28">
+									<Label text="Active Key ID:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="active_key_idField" GridPane.columnIndex="1" GridPane.rowIndex="28" promptText="Power of 2 in seconds (default: 0)"/>
+							</GridPane>
+						</VBox>
+					</ScrollPane>
+				</Tab>
+				<Tab text="Interface Options" fx:id="interfaceOptionsTab">
+					<ScrollPane fitToWidth="true">
+						<VBox spacing="15" styleClass="content-container">
+							<padding>
+								<Insets top="15" right="15" bottom="15" left="15"/>
+							</padding>
+							<GridPane hgap="10" vgap="8">
+								<columnConstraints>
+									<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+									<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+								</columnConstraints>
+								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+									<Label text="Clock Type:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the kind of PTP clock. OC: ordinary clock. BC: boundary clock. P2P_TC: peer to peer transparent clock. E2E_TC: end to end transparent clock. A multi-port ordinary clock will automatically be configured as a boundary clock." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="clockTypeCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Select clock type" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+									<Label text="Network Transport:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Possible values are UDPv4, UDPv6, and L2." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="networkTransportCombo" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="Select network transport" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+									<Label text="Delay Mechanism:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Delay mechanism. Possible values are E2E, P2P, and Auto." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="delayMechanismCombo" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="Select delay mechanism" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+									<Label text="Time Stamping:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Time stamping method. Allowed values are hardware, software, legacy, onestep, and p2p1step." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="timeStampingCombo" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="Select time stamping" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
+									<Label text="TS Proc Mode:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Time stamp processing mode used to calculate offset and delay. Possible values are filter, raw, filter_weight, and raw_weight. Raw modes perform well when the rate of sync messages is similar to the rate of delay messages. Weighting is useful with larger network jitters." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="tsproc_modeCombo" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="Select ts proc mode" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="6">
+									<Label text="Delay Filter:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="delay_filterCombo" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="Select delay filter" maxWidth="Infinity"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="7">
+									<Label text="Delay Filter Length:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Algorithm used to filter the measured delay and peer delay. Possible values are moving_average and moving_median." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="delay_filter_lengthField" GridPane.columnIndex="1" GridPane.rowIndex="7" promptText="0-255 (default: 10)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="8">
+									<Label text="Egress Latency:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Difference in nanoseconds between the actual transmission time at the reference plane and the reported transmit time stamp. This value is added to egress time stamps obtained from the hardware." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="egressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="8" promptText="Nanoseconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="9">
+									<Label text="Ingress Latency:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Difference in nanoseconds between the reported receive time stamp and the actual reception time at reference plane. This value is subtracted from ingress time stamps obtained from the hardware." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="ingressLatencyField" GridPane.columnIndex="1" GridPane.rowIndex="9" promptText="Nanoseconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="10">
+									<Label text="Boundary Clock Jbod:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: allows ptp4l to work as a boundary clock using “just a bunch of devices” that are not synchronized to each other. The collection of clocks must be synchronized by an external program, for example phc2sys(8) in automatic mode." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="boundary_clock_jbodField" GridPane.columnIndex="1" GridPane.rowIndex="10" promptText="0-255 (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="11">
+									<Label text="PHC Index:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Index of the PHC used for synchronization with hardware timestamping. Useful with virtual clocks running on top of a free-running physical clock.-1: index is set to the PHC associated with the interface or the device specified by the -p option." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="phc_indexField" GridPane.columnIndex="1" GridPane.rowIndex="11" promptText="0-255 (default: -1)"/>
+							</GridPane>
+						</VBox>
+					</ScrollPane>
+				</Tab>
+				<Tab text="Runtime Options" fx:id="runtimeOptionsTab">
+					<ScrollPane fitToWidth="true">
+						<VBox spacing="15" styleClass="content-container">
+							<padding>
+								<Insets top="15" right="15" bottom="15" left="15"/>
+							</padding>
+							<GridPane hgap="10" vgap="8">
+								<columnConstraints>
+									<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+									<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+								</columnConstraints>
+								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+									<Label text="Assume Two Step:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: treat one-step responses as two-step. Used to work around buggy 802.1AS switches." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="assume_two_stepCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+									<Label text="Check Fup Sync:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: adds an additional check using the software time stamps from the networking stack to verify the sync message arrived first. This is only useful if you do not trust the sequence IDs generated by the server." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="check_fup_syncCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+									<Label text="Clock Class Threshold:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The maximum clock class value from master, acceptible to sub-ordinate clock beyond which it moves out of lock state." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="clock_class_thresholdField" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="0-255 (default: 248)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+									<Label text="Follow Up Info:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: include the 802.1AS data in the Follow_Up messages." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="follow_up_infoCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
+									<Label text="Hybrid E2E:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: hybrid delay mechanism from the draft Enterprise Profile. When enabled, ports in the client state send their delay request messages to the unicast address taken from the server’s announce message. Ports in the server state will reply to unicast delay requests using unicast delay responses. This option has no effect if the delay_mechanism is set to P2P." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="hybrid_e2eCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="6">
+									<Label text="Inhibit Multicast Service:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Some unicast mode profiles insist that no multicast message are ever transmitted. Setting this option to 1 inhibits multicast transmission." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="inhibit_multicast_serviceCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="7">
+									<Label text="Kernel Leap:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="When a leap second is announced, let the kernel apply it by stepping the clock instead of correcting the one-second offset with servo. Relevant only with software time stamping." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="kernel_leapCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="8">
+									<Label text="Logging Level:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The maximum logging level of messages which should be printed. The default is LOG_INFO (6)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="logging_levelField" GridPane.columnIndex="1" GridPane.rowIndex="8" promptText="0-255 (default: 6)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="9">
+									<Label text="Net Sync Monitor:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: enables the NetSync Monitor (NSM) protocol which allows a station to measure how well another node is synchronized. Requires hybrid_e2e to also be enabled." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="net_sync_monitorCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="10">
+									<Label text="Path Trace Enabled:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: Enable the mechanism used to trace the route of the Announce messages." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="path_trace_enabledCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="11">
+									<Label text="Summary Interval:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The time interval, specified as a power of two in seconds, in which are printed summary statistics of the clock at the LOG_INFO level. The default is 1 second (0)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="summary_intervalField" GridPane.columnIndex="1" GridPane.rowIndex="11" promptText="0-255 (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="12">
+									<Label text="TC Spanning Tree:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="When running as a Transparent Clock, increment the stepsRemoved field of Announce messages that pass through the switch. Enabling this option ensures that PTP message loops never form, provided the switches all implement this option together with the BMCA." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="tc_spanning_treeCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="13">
+									<Label text="TX Timestamp Timeout:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The number of milliseconds to poll waiting for the tx time stamp from the kernel when a message has recently been sent." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="tx_timestamp_timeoutField" GridPane.columnIndex="1" GridPane.rowIndex="13" promptText="0-255 (default: 10)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="14">
+									<Label text="Unicast Listen:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: allows the port to grant unicast message contracts. Incoming requests for will be granted limited only by the amount of memory available." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="unicast_listenCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="14"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="15">
+									<Label text="Unicast Master Table:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="When set to a positive integer, specifies the table id to be used for unicast discovery. The default is 0 (unicast discovery disabled)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="unicast_master_tableField" GridPane.columnIndex="1" GridPane.rowIndex="15" promptText="0-255 (default: 10)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="16">
+									<Label text="Unicast Req Duration:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The service time, in seconds, requested during unicast discovery. Note that the remote node is free to grant a different duration." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="unicast_req_durationField" GridPane.columnIndex="1" GridPane.rowIndex="16" promptText="(default: 3600)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="17">
+									<Label text="Use Syslog:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="	1: print messages to the system log." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="use_syslogCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="17"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="18">
+									<Label text="Verbose:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: print messages to the standard output." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="verboseCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="18"/>
+							</GridPane>
+						</VBox>
+					</ScrollPane>
+				</Tab>
+				<Tab text="Servo Options" fx:id="servoOptionsTab">
+					<ScrollPane fitToWidth="true">
+						<VBox spacing="15" styleClass="content-container">
+							<padding>
+								<Insets top="15" right="15" bottom="15" left="15"/>
+							</padding>
+							<GridPane hgap="10" vgap="8">
+								<columnConstraints>
+									<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+									<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+								</columnConstraints>
+								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+									<Label text="Clock Servo:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The servo which is used to synchronize the local clock. pi: PI controller. linreg: an adaptive controller using linear regression. ntpshm: NTP SHM reference clock to allow another process to synchronize the local clock (the SHM segment number is set to the domain number). nullf: a servo that always dials frequency offset zero (for use in SyncE nodes)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<ComboBox fx:id="clock_servoCombo" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Select servo type" maxWidth="Infinity"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+									<Label text="First Step Threshold:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Maximum offset, specified in seconds, the servo will correct by changing the clock frequency instead of stepping the clock. This is only applied on the first update. When set to 0.0, the servo won’t step the clock on start. The default is 20 microseconds (0.00002)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="first_step_thresholdField" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="(default: 0.00002 (20 microseconds))"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+									<Label text="Max Frequency:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Maximum allowed frequency adjustment of the clock in parts per billion. This is an additional limit to the maximum allowed by the hardware. When set to 0, the hardware limit will be used. The default is 900000000 90% (900000000)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="max_frequencyField" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="(default: 900000000 (90 Percent))"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+									<Label text="Msg Interval Request:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: triggers an adjustment to the Sync and peer delay request message intervals when the clock servo transitions into the SERVO_LOCKED_STABLE state. The values to use for the new Sync and peer delay request intervals are specified by operLogSyncInterval and operLogPdelayReqInterval." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="msg_interval_requestCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
+									<Label text="NTP SHM Segment:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The number of the SHM segment used by ntpshm servo." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="ntpshm_segmentField" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="(default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="6">
+									<Label text="PI Integral Const:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The integral constant of the PI controller." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="pi_integral_constField" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="(default: 0.0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="7">
+									<Label text="PI Integral Exponent:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The ki_exponent constant in the formula used to set the integral constant of the PI controller from the sync interval." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="pi_integral_exponentField" GridPane.columnIndex="1" GridPane.rowIndex="7" promptText="(default: 0.4)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="8">
+									<Label text="PI Integral Norm Max:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The ki_norm_max constant in the formula used to set the integral constant of the PI controller from the sync interval." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="pi_integral_norm_maxField" GridPane.columnIndex="1" GridPane.rowIndex="8" promptText="(default: 0.3)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="9">
+									<Label text="PI Integral Scale:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The ki_scale constant in the formula used to set the integral constant of the PI controller from the sync interval." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="pi_integral_scaleField" GridPane.columnIndex="1" GridPane.rowIndex="9" promptText="(default: 0.0)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="10">
+									<Label text="PI Proportional Const:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The proportional constant of the PI controller." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="pi_proportional_constField" GridPane.columnIndex="1" GridPane.rowIndex="10" promptText="(default: 0.0)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="11">
+									<Label text="PI Proportional Exponent:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="	The kp_exponent constant in the formula used to set the proportional constant of the PI controller from the sync interval." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="pi_proportional_exponentField" GridPane.columnIndex="1" GridPane.rowIndex="11" promptText="(default: -0.3)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="12">
+									<Label text="PI Proportional Norm Max:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The kp_norm_max constant in the formula used to set the proportional constant of the PI controller from the sync interval." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="pi_proportional_norm_maxField" GridPane.columnIndex="1" GridPane.rowIndex="12" promptText="(default: 0.7)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="13">
+									<Label text="PI Proportional Scale:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The kp_scale constant in the formula used to set the proportional constant of the PI controller from the sync interval." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="pi_proportional_scaleField" GridPane.columnIndex="1" GridPane.rowIndex="13" promptText="(default: 0.0)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="14">
+									<Label text="Sanity Freq Limit:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The maximum allowed frequency offset between uncorrected clock and the system monotonic clock in parts per billion. This is used as a sanity check of the synchronized clock. When a larger offset is measured, a warning message will be printed and the servo will be reset. When set to 0, the sanity check is disabled. The default is 20% (200000000)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="sanity_freq_limitField" GridPane.columnIndex="1" GridPane.rowIndex="14" promptText="(default: 200000000 (20 Percent))"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="15">
+									<Label text="Servo Num Offset Values:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The number of offset values considered in order to transition from the SERVO_LOCKED to the SERVO_LOCKED_STABLE state. The transition occurs once the last servo_num_offset_values offsets are all below the servo_offset_threshold value." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="servo_num_offset_valuesField" GridPane.columnIndex="1" GridPane.rowIndex="15" promptText="(default: 10)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="16">
+									<Label text="Servo Offset Threshold:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="	The offset threshold used to transition from SERVO_LOCKED to SERVO_LOCKED_STABLE. The transition occurs once the last servo_num_offset_values offsets are all below the threshold value. The default is disabled (0)." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="servo_offset_thresholdField" GridPane.columnIndex="1" GridPane.rowIndex="16" promptText="(default: 0)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="17">
+									<Label text="Step Threshold:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The maximum offset, in seconds, the servo will correct by changing the clock frequency instead of stepping the clock. 0.0: the servo will never step the clock except on start." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="step_thresholdField" GridPane.columnIndex="1" GridPane.rowIndex="17" promptText="Seconds (default: 0.0)"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="18">
+									<Label text="Write Phase Mode:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="1: enables the write phase feature of a PTP Hardware Clock. If supported by the device, this mode uses the hardware’s built in phase offset control instead of frequency offset control." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="write_phase_modeCheck" text="" GridPane.columnIndex="1" GridPane.rowIndex="18"/>
+							</GridPane>
+						</VBox>
+					</ScrollPane>
+				</Tab>
+				
+				<Tab text="Execution">
+					<ScrollPane fitToWidth="true">
+						<VBox spacing="15" styleClass="content-container">
+							<padding>
+								<Insets top="15" right="15" bottom="15" left="15"/>
+							</padding>
+							<TitledPane text="Interface Configuration" expanded="true" styleClass="section-pane">
+								<VBox spacing="10">
+									<GridPane hgap="10" vgap="8">
+										<columnConstraints>
+											<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+											<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+										</columnConstraints>
+										<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+											<Label text="Interface Name:"/>
+											<Label text="ⓘ" styleClass="info-icon">
+												<tooltip>
+													<Tooltip text="PTP protokolünün çalışacağı ağ arayüzünün adı (ör. eth0)." wrapText="true"/>
+												</tooltip>
+											</Label>
+										</HBox>
+										<TextField fx:id="interfaceNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="e.g., eth0, enp0s3"/>
+									</GridPane>
+								</VBox>
+							</TitledPane>
+							<TitledPane text="Master/Slave Configuration" expanded="true" styleClass="section-pane">
+								<VBox spacing="10">
+									<CheckBox fx:id="masterModeCheck" text="Master Mode (checked: -m only, unchecked: -m -s)"/>
+									<Label text="Note: When checked, runs as master (-m). When unchecked, runs as slave (-m -s)." style="-fx-font-style: italic; -fx-text-fill: #666666;"/>
+								</VBox>
+							</TitledPane>
+							<TitledPane text="Execution Options" expanded="true" styleClass="section-pane">
+								<VBox spacing="10">
+									<HBox spacing="20">
+										<CheckBox fx:id="useSudoCheck" text="Use Sudo"/>
+										<CheckBox fx:id="quietCheck" text="Quiet (-q)"/>
+									</HBox>
+									<GridPane hgap="10" vgap="8">
+										<columnConstraints>
+											<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+											<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+										</columnConstraints>
+										<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+											<Label text="Print Level:"/>
+											<Label text="ⓘ" styleClass="info-icon">
+												<tooltip>
+													<Tooltip text="Konsola yazdırılacak günlük mesajlarının ayrıntı seviyesi." wrapText="true"/>
+												</tooltip>
+											</Label>
+										</HBox>
+										<TextField fx:id="printLevelField" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="0-6 (default: 6)"/>
+									</GridPane>
+								</VBox>
+							</TitledPane>
+						</VBox>
+					</ScrollPane>
+				</Tab>
+			</TabPane>
+			<HBox spacing="10" alignment="CENTER" styleClass="control-buttons">
+				<Button fx:id="saveConfigButton" text="Save &amp; Upload Config" styleClass="save-button"/>
+				<Button fx:id="startButton" text="Start PTP4L" styleClass="start-button"/>
+				<Button fx:id="stopButton" text="Stop PTP4L" styleClass="stop-button"/>
+				<Button fx:id="clearButton" text="Clear Output" styleClass="clear-button"/>
+			</HBox>
+		</VBox>
+	</TitledPane>
+	<TitledPane text="Output" expanded="false" styleClass="section-pane">
+		<VBox spacing="30">
+			<TextArea fx:id="outputArea" promptText="PTP4L output will appear here..." VBox.vgrow="ALWAYS" styleClass="output-area" prefRowCount="30" minHeight="200" prefHeight="300"/>
+		</VBox>
+	</TitledPane>
+</VBox>
