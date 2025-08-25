@@ -310,18 +310,10 @@
 }
 
 .tooltip {
-    
 	-fx-show-delay: 0ms;
 	-fx-hide-delay: 0ms; 
     -fx-show-duration: 600s; 
 
-    /* Diğer mevcut stilleriniz */
-    -fx-font-size: 13px;
-    -fx-background-color: #333333;
-    -fx-text-fill: white;
-    -fx-background-radius: 5;
-    -fx-opacity: 0.9;
-	
-	-fx-pref-width: 350px;
-	-fx-wrap-text: true; 
 }
+
+

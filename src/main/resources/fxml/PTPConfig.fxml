@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ptpapp.PTPConfigController" fx:id="mainContainer" spacing="10" styleClass="main-container">
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ptpapp.PTPConfigController" fx:id="mainContainer" spacing="10" styleClass="main-container">
 	<padding>
 		<Insets top="20" right="20" bottom="20" left="20"/>
 	</padding>
@@ -76,7 +76,7 @@
 								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
 								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="0">
 									<Label text="E2E Transparent Clock:"/>
-									<Label fx:id="clockTypeInfo" text="ⓘ" styleClass="info-icon">
+									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
 											<Tooltip text="End-to-End Transparent Clock example configuration containing those attributes which differ from the defaults." wrapText="true"/>
 										</tooltip>
@@ -128,11 +128,29 @@
 									</Label>
 								</HBox>
 								<CheckBox fx:id="g_PTP" text="" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="7" GridPane.columnIndex="0">
+									<Label text="C37.238-2011:"/>
+									<Label fx:id="clockTypeInfo" text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="End-to-End Transparent Clock example configuration containing those attributes which differ from the defaults." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="c37_238_2011" text="" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="8" GridPane.columnIndex="0">
+									<Label text="C37.238-2017:"/>
+									<Label fx:id="clockTypeInfo" text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="End-to-End Transparent Clock example configuration containing those attributes which differ from the defaults." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<CheckBox fx:id="c37_238_2017" text="" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 							</GridPane>
 						</VBox>
 					</ScrollPane>
 				</Tab>
-				<Tab text="Default Program and Clock Options" fx:id="defaultOptionsTab">
+				<Tab text="Program and Clock Options" fx:id="defaultOptionsTab">
 					<ScrollPane fitToWidth="true">
 						<VBox spacing="15" styleClass="content-container">
 							<padding>
@@ -523,7 +541,7 @@
 									<Label text="Allowed Lost Responses:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="The number of missed peer delay responses before the asCapable variable is reset. The default is 3." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
@@ -532,7 +550,7 @@
 									<Label text="Power Profile 2011 Grandmaster Time Inaccuracy:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="Specifies the time inaccuracy of the GM in nanoseconds. Relevant only when power_profile.version is 2011. This value may be changed dynamically using the POWER_PROFILE_SETTINGS_NP management message. The default is -1 meaning unknown inaccuracy." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
@@ -541,7 +559,7 @@
 									<Label text="Power Profile 2011 Network Time Inaccuracy:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="Specifies the time inaccuracy of the network in nanoseconds. Relevant only when power_profile.version is 2011. This value may be changed dynamically using the POWER_PROFILE_SETTINGS_NP management message. The default is -1 meaning unknown inaccuracy." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
@@ -550,7 +568,7 @@
 									<Label text="Power Profile 2017 Total Time Inaccuracy:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="Specifies the sum of the GM, network, and local node inaccuracies in nanoseconds. Relevant only when power_profile.version is 2017. This value may be changed dynamically using the POWER_PROFILE_SETTINGS_NP management message. The default is -1 meaning unknown inaccuracy." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
@@ -559,7 +577,7 @@
 									<Label text="Power Profile Grandmaster ID:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="Specifies an optional, non-zero identification code for the GM. Note that the code is an arbitrary, power profile specific integer, not necessarily related to the clockIdentity in any way. This value may be changed dynamically using the POWER_PROFILE_SETTINGS_NP management message. The default is 0 meaning unused." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
@@ -568,16 +586,16 @@
 									<Label text="Power Profile Version:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="Specifies the power profile version to be used. Valid values are none, 2011, or 2017. This value may be changed dynamically using the POWER_PROFILE_SETTINGS_NP management message. The default is none." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
-								<TextField fx:id="power_profile_versionField" GridPane.columnIndex="1" GridPane.rowIndex="25" promptText="Power of 2 in seconds (default: none)"/>
+								<ComboBox fx:id="power_profile_versionCombo" GridPane.columnIndex="1" GridPane.rowIndex="25" promptText="Select Power Profile Version" maxWidth="Infinity"/>
 								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="26">
 									<Label text="PTP Minor Version:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="This option sets the minorVersionPTP in the common PTP message header. The default is 1." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
@@ -586,7 +604,7 @@
 									<Label text="SPP:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="Specifies the Security Parameters Pointer of the desired Security Association to be used for Authentication TLV support for a given port. Any port with an assigned spp will attach Authentication TLVs to all outbound messages and check for Authentication TLVs on all inbound messages in accordance to the corresponding security association sourced via the sa_file directive. Outbound Authentication TLVs are generated using the key specified by active_key_id. Not compatible with one step ports or advertised versions less then PTPv2.1. Requires sa_file and active_key_id directives. Must be in the range of 0 to 255, inclusive. The default is -1 (disabled)." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
@@ -595,11 +613,206 @@
 									<Label text="Active Key ID:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="Used in conjunction with spp and sa_file directives to specify which key from the spp defined Security Association should be used for outbound icv calculations. All Security Assocations are read from the file specified by sa_file. Requires spp and sa_file directives. Must be in the range of 1 to 2^32-1, inclusive. The default is 0 (disabled)." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
 								<TextField fx:id="active_key_idField" GridPane.columnIndex="1" GridPane.rowIndex="28" promptText="Power of 2 in seconds (default: 0)"/>
+							</GridPane>
+						</VBox>
+					</ScrollPane>
+				</Tab>
+				<Tab text="Transport Options" fx:id="transportOptionsTab">
+					<ScrollPane fitToWidth="true">
+						<VBox spacing="15" styleClass="content-container">
+							<padding>
+								<Insets top="15" right="15" bottom="15" left="15"/>
+							</padding>
+							<GridPane hgap="10" vgap="8">
+								<columnConstraints>
+									<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
+									<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
+								</columnConstraints>
+								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+									<Label text="CMLDS Client Address:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="	Specifies the source address for the UNIX domain socket that receives peer delay measurement when using the COMMON_P2P delay mechanism. The default is /var/run/cmlds_client." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="cmlds_client_addressField" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="(default: /var/run/cmlds_client)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+									<Label text="CMLDS Domain Number:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the domainNumber message field for communications with the local Common Mean Link Delay Service, used with the COMMON_P2P delay mechanism. The default is 0." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="cmlds_domainNumberField" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="(default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+									<Label text="CMLDS Major Sdo Id:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the transportSpecific message field for communications with the local Common Mean Link Delay Service, used with the COMMON_P2P delay mechanism. The default is 2." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="cmlds_majorSdoIdField" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="(default: 2)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+									<Label text="CMLDS Port:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the port number of local Common Mean Link Delay Service from which to accept delay measurements. The range of valid port numbers is one to 65535, but the special value zero configures the port number of the port requesting the measurements. The default is 0, meaning the requesting port number." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="cmlds_portField" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="(default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
+									<Label text="CMLDS Server Address:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the UNIX domain socket address of the local Common Mean Link Delay Service, for use with the COMMON_P2P delay mechanism. The default is /var/run/cmlds_server." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="cmlds_server_addressField" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="(default: /var/run/cmlds_server)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="6">
+									<Label text="Transport Specific:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The transport specific field. Must be in the range 0 to 255. The default is 0." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="transportSpecificField" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="Power of 2 in seconds (default: 0)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="7">
+									<Label text="PTP Dst IPv4:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The IPv4 address to which PTP messages should be sent. Relevant only with UDPv4 transport. The default is 224.0.1.129." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="ptp_dst_ipv4Field" GridPane.columnIndex="1" GridPane.rowIndex="7" promptText="(default: 224.0.1.129)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="8">
+									<Label text="P2P Dst IPv4:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The IPv4 address to which peer delay messages should be sent. Relevant only with UDPv4 transport. The default is 224.0.0.107." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="p2p_dst_ipv4Field" text="" GridPane.columnIndex="1" GridPane.rowIndex="8" promptText="(default: 224.0.0.107)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="9">
+									<Label text="PTP Dst IPv6:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The IPv6 address to which PTP messages should be sent. The second byte of the address is substituted with udp6_scope. Relevant only with UDPv6 transport. The default is FF0E:0:0:0:0:0:0:181." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="ptp_dst_ipv6Field" text="" GridPane.columnIndex="1" GridPane.rowIndex="9" promptText="(default: FF0E:0:0:0:0:0:0:181)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="10">
+									<Label text="P2P Dst IPv6:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The IPv6 address to which peer delay messages should be sent. Relevant only with UDPv6 transport. The default is FF02:0:0:0:0:0:0:6B." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="p2p_dst_ipv6Field" text="" GridPane.columnIndex="1" GridPane.rowIndex="10" promptText="(default: FF02:0:0:0:0:0:0:6B)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="11">
+									<Label text="PTP Dst MAC:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The MAC address to which PTP messages should be sent. Relevant only with L2 transport. The default is 01:1B:19:00:00:00." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="ptp_dst_macField" GridPane.columnIndex="1" GridPane.rowIndex="11" promptText="(default: 01:1B:19:00:00:00)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="12">
+									<Label text="P2P Dst MAC:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="The MAC address to which peer delay messages should be sent. Relevant only with L2 transport. The default is 01:80:C2:00:00:0E." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="p2p_dst_macField" GridPane.columnIndex="1" GridPane.rowIndex="12" promptText="(default: 01:80:C2:00:00:0E)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="13">
+									<Label text="UDP TTL:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the Time to live (TTL) value for IPv4 multicast messages and the hop limit for IPv6 multicast messages. This option is only relevant with the IPv4 and IPv6 UDP transports. The default is 1 to restrict the messages sent by ptp4l to the same subnet." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="udp_ttlField" GridPane.columnIndex="1" GridPane.rowIndex="13" promptText="(default: 1)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="14">
+									<Label text="UDP6 Scope:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the desired scope for the IPv6 multicast messages. This will be used as the second byte of the primary address. This option is only relevant with IPv6 transport. See RFC 4291. The default is 0x0E for the global scope." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="udp6_scopeField" GridPane.columnIndex="1" GridPane.rowIndex="14" promptText="(default: 0x0E)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="15">
+									<Label text="UDS Address:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the address of the UNIX domain socket for receiving local management messages. The default is /var/run/ptp4l." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="uds_addressField" GridPane.columnIndex="1" GridPane.rowIndex="15" promptText="(default: /var/run/ptp4l)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="16">
+									<Label text="UDS File Mode:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="File mode of the UNIX domain socket used for receiving local management messages. The mode should be specified as an octal number, i.e. it should start with a 0 literal. The default mode is 0660." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="uds_file_modeField" GridPane.columnIndex="1" GridPane.rowIndex="16" promptText="(default: 0660)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="17">
+									<Label text="UDS RO Address:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="Specifies the address of the second UNIX domain socket for receiving local management messages, which is restricted to GET actions and does not forward messages to other ports. Access to this socket can be given to untrusted applications for monitoring purposes. The default is /var/run/ptp4lro." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="uds_ro_addressField" GridPane.columnIndex="1" GridPane.rowIndex="17" promptText="(default: /var/run/ptp4lro)"/>
+								
+								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="18">
+									<Label text="UDS RO File Mode:"/>
+									<Label text="ⓘ" styleClass="info-icon">
+										<tooltip>
+											<Tooltip text="File mode of the second (read-only) UNIX domain socket used for receiving local management messages. The mode should be specified as an octal number, i.e. it should start with a 0 literal. The default mode is 0666." wrapText="true"/>
+										</tooltip>
+									</Label>
+								</HBox>
+								<TextField fx:id="uds_ro_file_modeField" text="" GridPane.columnIndex="1" GridPane.rowIndex="18" promptText="(default: 0666)"/>
 							</GridPane>
 						</VBox>
 					</ScrollPane>
@@ -670,7 +883,7 @@
 									<Label text="Delay Filter:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Bu alan için açıklama." wrapText="true"/>
+											<Tooltip text="Select the algorithm used to filter the measured delay and peer delay. Possible values are moving_average and moving_median. The default is moving_median." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>
@@ -679,7 +892,7 @@
 									<Label text="Delay Filter Length:"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
-											<Tooltip text="Algorithm used to filter the measured delay and peer delay. Possible values are moving_average and moving_median." wrapText="true"/>
+											<Tooltip text="The length of the delay filter in samples. The default is 10." wrapText="true"/>
 										</tooltip>
 									</Label>
 								</HBox>

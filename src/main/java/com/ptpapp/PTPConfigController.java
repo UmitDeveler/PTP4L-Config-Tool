@@ -9,10 +9,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.scene.text.Text;
 import javafx.stage.Window;
 import javafx.util.Duration;
 
@@ -39,20 +39,21 @@ public class PTPConfigController {
 	// YENİ EKLENEN @FXML ALANLARI (SEKMELER)
     @FXML private Tab defaultOptionsTab;
     @FXML private Tab portOptionsTab;
+    @FXML private Tab transportOptionsTab;
     @FXML private Tab interfaceOptionsTab;
     @FXML private Tab runtimeOptionsTab;
     @FXML private Tab servoOptionsTab;
 
-    // YENİ EKLENEN @FXML ALANLARI (PROFIL CHECKBOX'LARI)
+    // Profiles
     @FXML private CheckBox e2e_transparent_clock;
     @FXML private CheckBox p2p_transparent_clock;
     @FXML private CheckBox g_8265_1;
     @FXML private CheckBox g_8275_1;
     @FXML private CheckBox g_8275_2;
     @FXML private CheckBox g_PTP;
-	
-    @FXML private Label clockTypeInfo;
-    @FXML private final Popup popup = new Popup();
+	@FXML private CheckBox c37_238_2011;
+	@FXML private CheckBox c37_238_2017;
+    
     // Configuration File Management
     @FXML private TextField remoteConfigPathField;
     @FXML private Button saveConfigButton;
@@ -90,6 +91,26 @@ public class PTPConfigController {
     @FXML private CheckBox twoStepFlagCheck;
     @FXML private TextField utc_offsetField;
 
+    // Transport Options
+    @FXML private TextField cmlds_client_addressField;
+    @FXML private TextField cmlds_domainNumberField;
+    @FXML private TextField cmlds_majorSdoIdField;
+    @FXML private TextField cmlds_portField;
+    @FXML private TextField cmlds_server_addressField;
+    @FXML private TextField transportSpecificField;
+    @FXML private TextField ptp_dst_ipv4Field;
+    @FXML private TextField p2p_dst_ipv4Field;
+    @FXML private TextField ptp_dst_ipv6Field;
+    @FXML private TextField p2p_dst_ipv6Field;
+    @FXML private TextField ptp_dst_macField;
+    @FXML private TextField p2p_dst_macField;
+    @FXML private TextField udp_ttlField;
+    @FXML private TextField udp6_scopeField;
+    @FXML private TextField uds_addressField;
+    @FXML private TextField uds_file_modeField;
+    @FXML private TextField uds_ro_addressField;
+    @FXML private TextField uds_ro_file_modeField;
+    
     // Interface Options
     @FXML private ComboBox<String> clockTypeCombo;
     @FXML private ComboBox<String> networkTransportCombo;
@@ -128,7 +149,7 @@ public class PTPConfigController {
     @FXML private TextField power_profile_2011_networkTimeInaccuracyField;
     @FXML private TextField power_profile_2017_totalTimeInaccuracyField;
     @FXML private TextField power_profile_grandmasterIDField;
-    @FXML private TextField power_profile_versionField;
+    @FXML private ComboBox<String> power_profile_versionCombo;
     @FXML private TextField ptp_minor_versionField;
     @FXML private TextField sppField;
     @FXML private TextField active_key_idField;
@@ -201,20 +222,19 @@ public class PTPConfigController {
         setupOutputArea();
         loadDefaultValues();
         setupSSH();
-        setupInfo();
 		
 		setupProfileTabLogic();
 
         // SADECE "ÖN-ISITMA" FONKSİYONUNU ÇAĞIRIYORUZ.
         // Tüm görsel ayarlar ve gecikme süreleri styles.css dosyasından yönetiliyor.
-        Platform.runLater(() -> prewarmAllTooltips(mainContainer));
+        Platform.runLater(() -> replaceSimpleTooltips(mainContainer));
     }
 
 	private void setupProfileTabLogic() {
         // Tüm profil CheckBox'larını bir listeye topluyoruz
         List<CheckBox> profileCheckBoxes = Arrays.asList(
                 e2e_transparent_clock, p2p_transparent_clock, g_8265_1,
-                g_8275_1, g_8275_2, g_PTP
+                g_8275_1, g_8275_2, g_PTP, c37_238_2011, c37_238_2017
         );
 
         // Her bir CheckBox için olay dinleyici (action listener) ekliyoruz
@@ -243,7 +263,7 @@ public class PTPConfigController {
 
         // Devre dışı bırakılacak sekmeleri bir listeye al
         List<Tab> configurableTabs = Arrays.asList(
-                defaultOptionsTab, portOptionsTab, interfaceOptionsTab,
+                defaultOptionsTab, portOptionsTab, transportOptionsTab, interfaceOptionsTab,
                 runtimeOptionsTab, servoOptionsTab
         );
 
@@ -295,7 +315,6 @@ public class PTPConfigController {
         ));
         clock_servoCombo.setValue("pi");
 
-
         BMCACombo.setItems(FXCollections.observableArrayList(
                 "noop", "ptp"
         ));
@@ -310,6 +329,11 @@ public class PTPConfigController {
                 "ieee1588", "G.8275.x"
         ));
         dataset_comparisonCombo.setValue("ieee1588");
+        
+        power_profile_versionCombo.setItems(FXCollections.observableArrayList(
+                "none", "2011", "2017"
+        ));
+        power_profile_versionCombo.setValue("none");
 
     }
 
@@ -352,6 +376,27 @@ public class PTPConfigController {
         maxStepsRemovedField.setText("255");
         utc_offsetField.setText("37");
 
+
+        // Transport Options
+        cmlds_client_addressField.setText("/var/run/cmlds_client");
+        cmlds_domainNumberField.setText("0");
+        cmlds_majorSdoIdField.setText("2");
+        cmlds_portField.setText("0");
+        cmlds_server_addressField.setText("/var/run/cmlds_server");
+        transportSpecificField.setText("0x0");
+        ptp_dst_ipv4Field.setText("224.0.1.129");
+        p2p_dst_ipv4Field.setText("224.0.0.107");
+        ptp_dst_ipv6Field.setText("FF0E:0:0:0:0:0:0:181");
+        p2p_dst_ipv6Field.setText("FF02:0:0:0:0:0:0:6B");
+        ptp_dst_macField.setText("01:1B:19:00:00:00");
+        p2p_dst_macField.setText("01:80:C2:00:00:0E");
+        udp_ttlField.setText("1");
+        udp6_scopeField.setText("0x0E");
+        uds_addressField.setText("/var/run/ptp4l");
+        uds_file_modeField.setText("0660");
+        uds_ro_addressField.setText("/var/run/ptp4lro");
+        uds_ro_file_modeField.setText("0666");
+        
         // Interface Options
         delay_filter_lengthField.setText("10");
         ingressLatencyField.setText("0");
@@ -382,7 +427,6 @@ public class PTPConfigController {
         power_profile_2011_networkTimeInaccuracyField.setText("-1");
         power_profile_2017_totalTimeInaccuracyField.setText("-1");
         power_profile_grandmasterIDField.setText("0");
-        power_profile_versionField.setText("none");
         ptp_minor_versionField.setText("1");
         sppField.setText("-1");
         active_key_idField.setText("0");
@@ -455,9 +499,7 @@ public class PTPConfigController {
         updateSSHUIState();
         updateConnectionStatus();
     }
-    private void setupInfo() {
-        setInfo(clockTypeInfo, "Specifies the kind of PTP clock.");
-    }
+  
     private void toggleSSHMode() {
         isSSHEnabled = enableSSHCheck.isSelected();
         updateSSHUIState();
@@ -834,11 +876,30 @@ public class PTPConfigController {
         configProperties.setProperty("power_profile.2011.networkTimeInaccuracy", power_profile_2011_networkTimeInaccuracyField.getText().trim());
         configProperties.setProperty("power_profile.2017.totalTimeInaccuracy", power_profile_2017_totalTimeInaccuracyField.getText().trim());
         configProperties.setProperty("power_profile.grandmasterID", power_profile_grandmasterIDField.getText().trim());
-        configProperties.setProperty("power_profile.version", power_profile_versionField.getText().trim());
         configProperties.setProperty("ptp_minor_version", ptp_minor_versionField.getText().trim());
         configProperties.setProperty("spp", sppField.getText().trim());
         configProperties.setProperty("active_key_id", active_key_idField.getText().trim());
-
+        
+        // Transport Options
+        configProperties.setProperty("cmlds.client_address", cmlds_client_addressField.getText().trim());
+        configProperties.setProperty("cmlds.domainNumber", cmlds_domainNumberField.getText().trim());
+        configProperties.setProperty("cmlds.majorSdoId", cmlds_majorSdoIdField.getText().trim());
+        configProperties.setProperty("cmlds.port", cmlds_portField.getText().trim());
+        configProperties.setProperty("cmlds.server_address", cmlds_server_addressField.getText().trim());
+        configProperties.setProperty("transportSpecific", transportSpecificField.getText().trim());
+        configProperties.setProperty("ptp_dst_ipv4", ptp_dst_ipv4Field.getText().trim());
+        configProperties.setProperty("p2p_dst_ipv4", p2p_dst_ipv4Field.getText().trim());
+        configProperties.setProperty("ptp_dst_ipv6", ptp_dst_ipv6Field.getText().trim());
+        configProperties.setProperty("p2p_dst_ipv6", p2p_dst_ipv6Field.getText().trim());
+        configProperties.setProperty("ptp_dst_mac", ptp_dst_macField.getText().trim());
+        configProperties.setProperty("p2p_dst_mac", p2p_dst_macField.getText().trim());
+        configProperties.setProperty("udp_ttl", udp_ttlField.getText().trim());
+        configProperties.setProperty("udp6_scope", udp6_scopeField.getText().trim());
+        configProperties.setProperty("uds_address", uds_addressField.getText().trim());
+        configProperties.setProperty("uds_file_mode", uds_file_modeField.getText().trim());
+        configProperties.setProperty("uds_ro_address", uds_ro_addressField.getText().trim());
+        configProperties.setProperty("uds_ro_file_mode", uds_ro_file_modeField.getText().trim());
+        
         // Runtime Options
         configProperties.setProperty("assume_two_step", assume_two_stepCheck.isSelected() ? "1" : "0");
         configProperties.setProperty("check_fup_sync", check_fup_syncCheck.isSelected() ? "1" : "0");
@@ -913,7 +974,9 @@ public class PTPConfigController {
         if (dataset_comparisonCombo.getValue() != null) {
             configProperties.setProperty("dataset_comparison", dataset_comparisonCombo.getValue());
         }
-
+        if (power_profile_versionCombo.getValue() != null) {
+            configProperties.setProperty("power_profile.version", power_profile_versionCombo.getValue());
+        }
         // Set checkboxes
         configProperties.setProperty("twoStepFlag", twoStepFlagCheck.isSelected() ? "1" : "0");
         configProperties.setProperty("clientOnly", clientOnlyCheck.isSelected() ? "1" : "0");
@@ -922,14 +985,12 @@ public class PTPConfigController {
 		if (e2e_transparent_clock.isSelected()) {
         outputArea.appendText(" 'E2E Transparent Clock' is selected \n");
         
-        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        // E2E Transparent Clock Options
         configProperties.setProperty("priority1", "254");
         configProperties.setProperty("free_running", "true" == "true" ? "1" : "0");
-		configProperties.setProperty("freq_est_interval", "3");
+        configProperties.setProperty("freq_est_interval", "3");
         configProperties.setProperty("tc_spanning_tree", "true" =="true" ? "1" : "0");
-		configProperties.setProperty("summary_interval", "1");
-        
-        // ComboBox'lar için özel mantık
+        configProperties.setProperty("summary_interval", "1");
         configProperties.setProperty("clock_type", "E2E_TC");
         configProperties.setProperty("network_transport", "L2");
 		}
@@ -937,14 +998,12 @@ public class PTPConfigController {
 		if (p2p_transparent_clock.isSelected()) {
         outputArea.appendText(" 'P2P Transparent Clock' is selected \n");
         
-        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        // P2P Transparent Clock Options
         configProperties.setProperty("priority1", "254");
         configProperties.setProperty("free_running", "true" == "true" ? "1" : "0");
 		configProperties.setProperty("freq_est_interval", "3");
         configProperties.setProperty("tc_spanning_tree", "true" =="true" ? "1" : "0");
 		configProperties.setProperty("summary_interval", "1");
-        
-        // ComboBox'lar için özel mantık
         configProperties.setProperty("clock_type", "P2P_TC");
         configProperties.setProperty("network_transport", "L2");
 		configProperties.setProperty("delay_mechanism", "P2P");
@@ -953,7 +1012,7 @@ public class PTPConfigController {
 		if (g_8265_1.isSelected()) {
         outputArea.appendText(" 'G.8265.1' is selected \n");
         
-        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        // G.8265.1 Options
         configProperties.setProperty("serverOnly", "false" == "true" ? "1" : "0");
 		configProperties.setProperty("hybrid_e2e", "true" == "true" ? "1" : "0");
 		configProperties.setProperty("inhibit_multicast_service", "true" == "true" ? "1" : "0");
@@ -965,7 +1024,7 @@ public class PTPConfigController {
 		if (g_8275_1.isSelected()) {
         outputArea.appendText(" 'G.8275.1' is selected \n");
         
-        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        // G.8275.1 Options
         configProperties.setProperty("G_8275_defaultDS_localPriorityField", "128");
 		configProperties.setProperty("maxStepsRemoved", "255");
 		configProperties.setProperty("logAnnounceInterval", "-3");
@@ -974,16 +1033,15 @@ public class PTPConfigController {
 		configProperties.setProperty("serverOnly", "false" == "true" ? "1" : "0");
 		configProperties.setProperty("G_8275_portDS_localPriorityField", "128");
 		configProperties.setProperty("domainNumber", "24");
-        
-        // ComboBox'lar için özel mantık
         configProperties.setProperty("dataset_comparison", "G.8275.x");
         configProperties.setProperty("network_transport", "L2");
+        configProperties.setProperty("ptp_dst_macField", "01:80:C2:00:00:0E");
 		}
 		
 		if (g_8275_2.isSelected()) {
         outputArea.appendText(" 'G.8275.2' is selected \n");
         
-        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        // G.8275.2 Options
         configProperties.setProperty("G_8275_defaultDS_localPriorityField", "128");
 		configProperties.setProperty("maxStepsRemoved", "255");
 		configProperties.setProperty("logAnnounceInterval", "0");
@@ -994,30 +1052,33 @@ public class PTPConfigController {
 		configProperties.setProperty("unicast_listen", "true" == "true" ? "1" : "0");
 		configProperties.setProperty("unicast_req_duration", "60");
 		configProperties.setProperty("domainNumber", "44");
-        
-        // ComboBox'lar için özel mantık
         configProperties.setProperty("dataset_comparison", "G.8275.x");
 		}
 		
 		if (g_PTP.isSelected()) {
         outputArea.appendText(" 'gPTP' is selected \n");
         
-        // SİZİN VERECEĞİNİZ DEĞERLERE GÖRE BU KISIM DOLDURULACAK
+        // gPTP Options
         configProperties.setProperty("priority1", "248");
 		configProperties.setProperty("priority2", "248");
         configProperties.setProperty("logAnnounceInterval", "0");
 		configProperties.setProperty("logSyncInterval", "-3");
 		configProperties.setProperty("syncReceiptTimeout", "3");
 		configProperties.setProperty("neighborPropDelayThresh", "800");
-		
 		configProperties.setProperty("assume_two_step", "true" == "true" ? "1" : "0");
 		configProperties.setProperty("path_trace_enabled", "true" == "true" ? "1" : "0");
 		configProperties.setProperty("follow_up_info", "true" == "true" ? "1" : "0");
-		
-		
-        // ComboBox'lar için özel mantık
         configProperties.setProperty("network_transport", "L2");
 		configProperties.setProperty("delay_mechanism", "P2P");
+		configProperties.setProperty("ptp_dst_macField", "01:80:C2:00:00:0E");
+		}
+		
+		if (c37_238_2011.isSelected()) {
+		outputArea.appendText(" 'C37.238-2011' is selected \n");    
+		}
+		
+		if (c37_238_2017.isSelected()) {
+		outputArea.appendText(" 'C37.238-2017' is selected \n");    
 		}
 		
         outputArea.appendText("✅ Config update completed - " + configProperties.size() + " properties set\n");
@@ -1203,68 +1264,55 @@ public class PTPConfigController {
         this.stage = stage;
     }
 
-    public void setInfo(Label icon, String message) {
-        // Popup içeriği
-        VBox popupContent = new VBox();
-        popupContent.setStyle("-fx-background-color: white; -fx-border-color: #aaa; -fx-border-radius: 5; -fx-background-radius: 5;");
-        popupContent.setPadding(new Insets(10));
-        popupContent.setSpacing(5);
-
-        Text infoText = new Text(message);
-        infoText.setStyle("-fx-font-size: 13;");
-        popupContent.getChildren().add(infoText);
-
-        popup.getContent().add(popupContent);
-        popup.setAutoHide(true);  // başka bir yere tıklanırsa kapanır
-
-        // Göster
-        icon.setOnMouseEntered((MouseEvent e) -> {
-            if (!popup.isShowing()) {
-                popup.show(icon.getScene().getWindow(), e.getScreenX() + 10, e.getScreenY() + 10);
-            }
-        });
-
-        // İkonu terk edince popup'ı gizle
-        icon.setOnMouseExited((MouseEvent e) -> {
-            popup.hide();
-        });
-
-        // Eğer mouse popup üzerine giderse, kapanmasın (ekstra)
-        popupContent.setOnMouseEntered(e -> popup.show(icon.getScene().getWindow()));
-        popupContent.setOnMouseExited(e -> popup.hide());
-    }
-
+    
     /**
      * Bir konteyner içindeki tüm tooltip'leri, onların görsel bileşenlerini
      * oluşturmaya zorlayarak "önceden ısıtır". Bu işlem, her tooltip için
      * yaşanan tek seferlik takılmayı ortadan kaldırır.
      */
-    private void prewarmAllTooltips(Parent parent){
-        for(Node node:parent.getChildrenUnmodifiable()){
-            Tooltip tooltip=null;
-            if(node instanceof Labeled){
-                tooltip=((Labeled)node).getTooltip();
-            }
-            if(tooltip!=null&&node.getScene()!=null&&node.getScene().getWindow()!=null){
-                try{
-                    final Window owner=node.getScene().getWindow();
-                    tooltip.show(owner,-1000,-1000);
-                    tooltip.hide();
-                }catch(Exception e){
-                    // Hata durumunda sessiz kal
+    private void replaceSimpleTooltips(Parent parent) {
+        if (parent == null) return;
+
+        // Parent'ın altındaki tüm elemanları gez
+        for (Node node : parent.getChildrenUnmodifiable()) {
+            
+            if (node instanceof Labeled) {
+                Labeled labeledNode = (Labeled) node;
+                Tooltip tooltip = labeledNode.getTooltip();
+
+                if (tooltip != null && tooltip.getGraphic() == null) { // Sadece işlenmemiş, basit tooltip'leri hedef al
+                    String originalText = tooltip.getText();
+                    if (originalText == null || originalText.isEmpty()) continue;
+
+                    // 1. Metni gösterecek ve alt satıra kaydıracak bir Text bileşeni oluştur
+                    Text textNode = new Text(originalText);
+                    textNode.setWrappingWidth(350); // Genişliği SABİTLE ve alta kaydırmayı SAĞLA
+                    textNode.setStyle("-fx-fill: white; -fx-font-size: 13px;");
+
+                    // 2. YENİ, boş bir Tooltip oluştur
+                    Tooltip newTooltip = new Tooltip();
+                    newTooltip.setShowDelay(Duration.millis(0));
+
+                    // 3. Stilli Text'i bu yeni tooltip'in "grafik" içeriği olarak ata
+                    newTooltip.setGraphic(textNode);
+                    
+                    // 4. Tooltip'in kendi arkaplanını ve padding'ini ayarla
+                    newTooltip.setStyle("-fx-background-color: rgba(43, 43, 43, 0.95); -fx-padding: 8px; -fx-background-radius: 5px;");
+                    
+                    // 5. Orijinal elemanın eski tooltip'ini bu yeni ve gelişmiş olanla değiştir
+                    labeledNode.setTooltip(newTooltip);
                 }
             }
-
-            // Düzeltilmiş ve Geliştirilmiş Recursive (Özyinelemeli) Çağrı
+            
+            // Recursive olarak alt elemanları gezmeye devam et
             if (node instanceof TabPane) {
                 for (Tab tab : ((TabPane) node).getTabs()) {
                     if (tab.getContent() instanceof Parent) {
-                        prewarmAllTooltips((Parent) tab.getContent());
+                        replaceSimpleTooltips((Parent) tab.getContent());
                     }
                 }
-            }
-            else if(node instanceof Parent){
-                prewarmAllTooltips((Parent)node); // Hata düzeltildi: `parent` yerine `node` kullanılıyor.
+            } else if (node instanceof Parent) {
+                replaceSimpleTooltips((Parent) node);
             }
         }
     }
