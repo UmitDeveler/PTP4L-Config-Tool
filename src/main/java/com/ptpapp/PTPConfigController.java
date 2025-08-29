@@ -36,14 +36,19 @@ public class PTPConfigController {
 
     @FXML private VBox mainContainer;
 	
-	// YENİ EKLENEN @FXML ALANLARI (SEKMELER)
+	// TitledPanes
+	@FXML private TitledPane sshTitledPane;
+    @FXML private TitledPane configTitledPane;
+    @FXML private TitledPane outputTitledPane;
+	
+	// Tabs
     @FXML private Tab defaultOptionsTab;
     @FXML private Tab portOptionsTab;
     @FXML private Tab transportOptionsTab;
     @FXML private Tab interfaceOptionsTab;
     @FXML private Tab runtimeOptionsTab;
     @FXML private Tab servoOptionsTab;
-
+    
     // Profiles
     @FXML private CheckBox e2e_transparent_clock;
     @FXML private CheckBox p2p_transparent_clock;
@@ -194,7 +199,6 @@ public class PTPConfigController {
     @FXML private TextField step_thresholdField;
     @FXML private CheckBox write_phase_modeCheck;
 
-
     // Execution
     @FXML private TextField interfaceNameField;
     @FXML private CheckBox masterModeCheck;
@@ -225,6 +229,7 @@ public class PTPConfigController {
 		
 		setupProfileTabLogic();
 
+        setupTitledPaneAccordion();
         // SADECE "ÖN-ISITMA" FONKSİYONUNU ÇAĞIRIYORUZ.
         // Tüm görsel ayarlar ve gecikme süreleri styles.css dosyasından yönetiliyor.
         Platform.runLater(() -> replaceSimpleTooltips(mainContainer));
@@ -243,6 +248,28 @@ public class PTPConfigController {
         }
     }
 	
+	private void setupTitledPaneAccordion() {
+        // Kontrol edilecek TitledPane'leri bir listeye al
+        List<TitledPane> titledPanes = Arrays.asList(sshTitledPane, configTitledPane, outputTitledPane);
+
+        // Her bir TitledPane'in "expanded" (genişletilmiş) özelliğini dinle
+        for (TitledPane pane : titledPanes) {
+            pane.expandedProperty().addListener((obs, wasExpanded, isNowExpanded) -> {
+                // Eğer bir pane AÇILIYORSA (isNowExpanded true ise)
+                if (isNowExpanded) {
+                    // Diğer tüm panelleri kontrol et
+                    for (TitledPane otherPane : titledPanes) {
+                        // Eğer kontrol edilen panel, yeni açılan panel değilse
+                        if (otherPane != pane) {
+                            // Onu kapat
+                            otherPane.setExpanded(false);
+                        }
+                    }
+                }
+            });
+        }
+    }
+    
 	private void handleProfileSelection(CheckBox selectedCb, List<CheckBox> allCheckBoxes) {
         // Eğer seçilen CheckBox işaretlendiyse:
         if (selectedCb.isSelected()) {
@@ -679,6 +706,28 @@ public class PTPConfigController {
                     writer.write(key + " " + value + "\n");
                 }
             }
+            
+            // G.8265.1 additional configurations for slave operations
+            if(g_8265_1.isSelected() && !masterModeCheck.isSelected()){
+                writer.write("[unicast_master_table]\n");
+                writer.write("table_id 1\n");
+                writer.write("logQueryInterval 2\n");
+                writer.write("UDPv4 192.168.1.11\n");
+                
+                writer.write("[eth0]\n");
+                writer.write("unicast_master_table 1\n");
+            }
+            
+            // G.8275.2 additional configurations for slave operations
+            if(g_8275_2.isSelected() && !masterModeCheck.isSelected()){
+                writer.write("[unicast_master_table]\n");
+                writer.write("table_id 1\n");
+                writer.write("logQueryInterval 2\n");
+                writer.write("UDPv4 192.168.1.11\n");
+                
+                writer.write("[eth0]\n");
+                writer.write("unicast_master_table 1\n");
+            }
         }
     }
 
@@ -838,13 +887,6 @@ public class PTPConfigController {
         configProperties.setProperty("G.8275.defaultDS.localPriority", G_8275_defaultDS_localPriorityField.getText().trim());
         configProperties.setProperty("maxStepsRemoved", maxStepsRemovedField.getText().trim());
         configProperties.setProperty("utc_offset", utc_offsetField.getText().trim());
-
-
-        // Update configuration properties from UI
-
-        outputArea.appendText("📝 Basic config: domain=" + domainNumberField.getText().trim() +
-                ", priority1=" + priority1Field.getText().trim() +
-                ", priority2=" + priority2Field.getText().trim() + "\n");
 
         // Interface Options
         configProperties.setProperty("delay_filter_length", delay_filter_lengthField.getText().trim());
@@ -1007,6 +1049,7 @@ public class PTPConfigController {
         configProperties.setProperty("clock_type", "P2P_TC");
         configProperties.setProperty("network_transport", "L2");
 		configProperties.setProperty("delay_mechanism", "P2P");
+		
 		}
 		
 		if (g_8265_1.isSelected()) {
@@ -1286,7 +1329,7 @@ public class PTPConfigController {
 
                     // 1. Metni gösterecek ve alt satıra kaydıracak bir Text bileşeni oluştur
                     Text textNode = new Text(originalText);
-                    textNode.setWrappingWidth(350); // Genişliği SABİTLE ve alta kaydırmayı SAĞLA
+                    textNode.setWrappingWidth(500); // Genişliği SABİTLE ve alta kaydırmayı SAĞLA
                     textNode.setStyle("-fx-fill: white; -fx-font-size: 13px;");
 
                     // 2. YENİ, boş bir Tooltip oluştur

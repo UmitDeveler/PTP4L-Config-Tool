@@ -11,7 +11,7 @@
 	<HBox alignment="CENTER" styleClass="header">
 		<Label text="PTP4L Configuration Tool" styleClass="header-label"/>
 	</HBox>
-	<TitledPane text="Remote Connection (SSH)" expanded="true" styleClass="section-pane">
+	<TitledPane fx:id="sshTitledPane" text="Remote Connection (SSH)" expanded="true" styleClass="section-pane">
 		<VBox spacing="10">
 			<HBox spacing="10" alignment="CENTER_LEFT">
 				<CheckBox fx:id="enableSSHCheck" text="Enable SSH Connection"/>
@@ -53,12 +53,12 @@
 				<Label text="" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
 			</GridPane>
 			<HBox spacing="10" alignment="CENTER">
-				<Button fx:id="connectSSHButton" text="Connect" styleClass="connect-button"/>
-				<Button fx:id="disconnectSSHButton" text="Disconnect" styleClass="disconnect-button"/>
-			</HBox>
+    <Button fx:id="connectSSHButton" text="Connect" styleClass="button, primary-button"/>
+    <Button fx:id="disconnectSSHButton" text="Disconnect" styleClass="button"/>
+</HBox>
 		</VBox>
 	</TitledPane>
-	<TitledPane text="Configuration Options" expanded="false" styleClass="section-pane">
+	<TitledPane fx:id="configTitledPane" text="Configuration Options" expanded="false" styleClass="section-pane">
 		<VBox spacing="10">
 			<TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
 			    <Tab text="Profiles">
@@ -1380,16 +1380,19 @@
 				</Tab>
 			</TabPane>
 			<HBox spacing="10" alignment="CENTER" styleClass="control-buttons">
-				<Button fx:id="saveConfigButton" text="Save &amp; Upload Config" styleClass="save-button"/>
-				<Button fx:id="startButton" text="Start PTP4L" styleClass="start-button"/>
-				<Button fx:id="stopButton" text="Stop PTP4L" styleClass="stop-button"/>
-				<Button fx:id="clearButton" text="Clear Output" styleClass="clear-button"/>
-			</HBox>
+    <Button fx:id="saveConfigButton" text="Save &amp; Upload Config" styleClass="button, primary-button"/>
+    
+    <Button fx:id="startButton" text="Start PTP4L" styleClass="start-button"/>
+    
+    <Button fx:id="stopButton" text="Stop PTP4L" styleClass="stop-button"/>
+    
+    <Button fx:id="clearButton" text="Clear Output" styleClass="button"/>
+</HBox>
 		</VBox>
 	</TitledPane>
-	<TitledPane text="Output" expanded="false" styleClass="section-pane">
+	<TitledPane fx:id="outputTitledPane" text="Output" expanded="false" styleClass="section-pane">
 		<VBox spacing="30">
-			<TextArea fx:id="outputArea" promptText="PTP4L output will appear here..." VBox.vgrow="ALWAYS" styleClass="output-area" prefRowCount="30" minHeight="200" prefHeight="300"/>
+			<TextArea fx:id="outputArea" promptText="PTP4L output will appear here..." VBox.vgrow="ALWAYS" styleClass="output-area" prefRowCount="30" minHeight="200" prefHeight="500"/>
 		</VBox>
 	</TitledPane>
 </VBox>
