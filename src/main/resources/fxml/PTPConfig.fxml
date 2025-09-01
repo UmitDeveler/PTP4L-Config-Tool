@@ -4,20 +4,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ptpapp.PTPConfigController" fx:id="mainContainer" spacing="10" styleClass="main-container">
-	<padding>
-		<Insets top="20" right="20" bottom="20" left="20"/>
-	</padding>
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ptpapp.PTPConfigController" fx:id="mainContainer" spacing="16" styleClass="main-container">
 	<HBox alignment="CENTER" styleClass="header">
 		<Label text="PTP4L Configuration Tool" styleClass="header-label"/>
 	</HBox>
 	<TitledPane fx:id="sshTitledPane" text="Remote Connection (SSH)" expanded="true" styleClass="section-pane">
-		<VBox spacing="10">
-			<HBox spacing="10" alignment="CENTER_LEFT">
+		<VBox spacing="16">
+			<HBox spacing="12" alignment="CENTER_LEFT">
 				<CheckBox fx:id="enableSSHCheck" text="Enable SSH Connection"/>
 				<Label fx:id="connectionStatusLabel" text="Local mode" styleClass="connection-status"/>
 			</HBox>
-			<GridPane hgap="10" vgap="8">
+			<GridPane hgap="12" vgap="12" styleClass="grid-pane">
 				<columnConstraints>
 					<ColumnConstraints hgrow="NEVER" minWidth="120" prefWidth="150"/>
 					<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="250"/>
@@ -52,30 +49,30 @@
 				<TextField fx:id="remoteConfigPathField" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="e.g., /etc/ptp4l.conf"/>
 				<Label text="" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
 			</GridPane>
-			<HBox spacing="10" alignment="CENTER">
-    <Button fx:id="connectSSHButton" text="Connect" styleClass="button, primary-button"/>
-    <Button fx:id="disconnectSSHButton" text="Disconnect" styleClass="button"/>
-</HBox>
+			<HBox spacing="12" alignment="CENTER">
+				<Button fx:id="connectSSHButton" text="Connect" styleClass="primary-button"/>
+				<Button fx:id="disconnectSSHButton" text="Disconnect"/>
+			</HBox>
 		</VBox>
 	</TitledPane>
 	<TitledPane fx:id="configTitledPane" text="Configuration Options" expanded="false" styleClass="section-pane">
-		<VBox spacing="10">
+		<VBox spacing="16">
 			<TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
 			    <Tab text="Profiles">
 					<ScrollPane fitToWidth="true">
-						<VBox spacing="15" styleClass="content-container" alignment="CENTER">
+						<VBox spacing="16" styleClass="content-container" alignment="CENTER">
 							<padding>
-								<Insets top="15" right="15" bottom="15" left="15"/>
+								<Insets top="16" right="16" bottom="16" left="16"/>
 							</padding>
-							<GridPane hgap="10" vgap="8">
+							<GridPane hgap="12" vgap="12" styleClass="grid-pane">
 								<columnConstraints>
 									<ColumnConstraints hgrow="NEVER" minWidth="150" prefWidth="200"/>
 									<ColumnConstraints hgrow="SOMETIMES" minWidth="200" prefWidth="300"/>
 									<ColumnConstraints hgrow="SOMETIMES"/>
 								</columnConstraints>
 								<Region GridPane.rowIndex="0" GridPane.columnIndex="0" minHeight="20"/>
-								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="0">
-									<Label text="E2E Transparent Clock:"/>
+								<HBox alignment="CENTER_LEFT" spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="0">
+									<Label text="E2E Transparent Clock:" styleClass="field-label"/>
 									<Label text="ⓘ" styleClass="info-icon">
 										<tooltip>
 											<Tooltip text="End-to-End Transparent Clock example configuration containing those attributes which differ from the defaults." wrapText="true"/>
@@ -545,7 +542,7 @@
 										</tooltip>
 									</Label>
 								</HBox>
-								<TextField fx:id="allowedLostResponsesField" GridPane.columnIndex="1" GridPane.rowIndex="20" promptText="Power of 2 in seconds (default: 3)"/>
+								<TextField fx:id="allowedLostResponsesField" GridPane.columnIndex="1" GridPane.rowIndex="20" promptText="(default: 3)"/>
 								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="21">
 									<Label text="Power Profile 2011 Grandmaster Time Inaccuracy:"/>
 									<Label text="ⓘ" styleClass="info-icon">
@@ -554,7 +551,7 @@
 										</tooltip>
 									</Label>
 								</HBox>
-								<TextField fx:id="power_profile_2011_grandmasterTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="21" promptText="Power of 2 in seconds (default: -1)"/>
+								<TextField fx:id="power_profile_2011_grandmasterTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="21" promptText="(default: -1)"/>
 								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="22">
 									<Label text="Power Profile 2011 Network Time Inaccuracy:"/>
 									<Label text="ⓘ" styleClass="info-icon">
@@ -563,7 +560,7 @@
 										</tooltip>
 									</Label>
 								</HBox>
-								<TextField fx:id="power_profile_2011_networkTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="22" promptText="Power of 2 in seconds (default: -1)"/>
+								<TextField fx:id="power_profile_2011_networkTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="22" promptText="(default: -1)"/>
 								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="23">
 									<Label text="Power Profile 2017 Total Time Inaccuracy:"/>
 									<Label text="ⓘ" styleClass="info-icon">
@@ -572,7 +569,7 @@
 										</tooltip>
 									</Label>
 								</HBox>
-								<TextField fx:id="power_profile_2017_totalTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="23" promptText="Power of 2 in seconds (default: -1)"/>
+								<TextField fx:id="power_profile_2017_totalTimeInaccuracyField" GridPane.columnIndex="1" GridPane.rowIndex="23" promptText="(default: -1)"/>
 								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="24">
 									<Label text="Power Profile Grandmaster ID:"/>
 									<Label text="ⓘ" styleClass="info-icon">
@@ -581,7 +578,7 @@
 										</tooltip>
 									</Label>
 								</HBox>
-								<TextField fx:id="power_profile_grandmasterIDField" GridPane.columnIndex="1" GridPane.rowIndex="24" promptText="Power of 2 in seconds (default: 0)"/>
+								<TextField fx:id="power_profile_grandmasterIDField" GridPane.columnIndex="1" GridPane.rowIndex="24" promptText="(default: 0)"/>
 								<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="25">
 									<Label text="Power Profile Version:"/>
 									<Label text="ⓘ" styleClass="info-icon">

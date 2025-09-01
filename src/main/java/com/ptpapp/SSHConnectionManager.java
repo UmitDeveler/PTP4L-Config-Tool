@@ -3,10 +3,8 @@ package com.ptpapp;
 import com.jcraft.jsch.*;
 import javafx.application.Platform;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;

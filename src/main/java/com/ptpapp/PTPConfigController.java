@@ -3,17 +3,13 @@ package com.ptpapp;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Duration;
 
 
@@ -29,10 +25,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public class PTPConfigController {
 
+    // Connection status constants
+    private static final String STATUS_LOCAL = "Local mode";
+    private static final String STATUS_CONNECTING = "Connecting...";
+    private static final String STATUS_CONNECTED = "Connected";
+    private static final String STATUS_ERROR = "Connection failed";
 
     @FXML private VBox mainContainer;
 	
@@ -580,7 +580,9 @@ public class PTPConfigController {
         }
 
         connectSSHButton.setDisable(true);
-        connectionStatusLabel.setText("Connecting...");
+        connectionStatusLabel.setText(STATUS_CONNECTING);
+        connectionStatusLabel.getStyleClass().removeAll("connected", "error");
+        connectionStatusLabel.getStyleClass().add("connecting");
 
         CompletableFuture<Boolean> connectionFuture;
 
@@ -678,15 +680,18 @@ public class PTPConfigController {
     }
 
     private void updateConnectionStatus() {
+        // Clear existing status classes
+        connectionStatusLabel.getStyleClass().removeAll("connected", "error", "connecting");
+        
         if (isSSHEnabled && sshManager.isConnected()) {
-            connectionStatusLabel.setText("Connected: " + sshManager.getConnectionInfo());
-            connectionStatusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+            connectionStatusLabel.setText(STATUS_CONNECTED + ": " + sshManager.getConnectionInfo());
+            connectionStatusLabel.getStyleClass().add("connected");
         } else if (isSSHEnabled) {
-            connectionStatusLabel.setText("Not connected");
-            connectionStatusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            connectionStatusLabel.setText(STATUS_ERROR);
+            connectionStatusLabel.getStyleClass().add("error");
         } else {
-            connectionStatusLabel.setText("Local mode");
-            connectionStatusLabel.setStyle("-fx-text-fill: blue; -fx-font-weight: bold;");
+            connectionStatusLabel.setText(STATUS_LOCAL);
+            // No additional class needed for local mode - uses default styling
         }
     }
 
@@ -1029,9 +1034,9 @@ public class PTPConfigController {
         
         // E2E Transparent Clock Options
         configProperties.setProperty("priority1", "254");
-        configProperties.setProperty("free_running", "true" == "true" ? "1" : "0");
+        configProperties.setProperty("free_running", "1");
         configProperties.setProperty("freq_est_interval", "3");
-        configProperties.setProperty("tc_spanning_tree", "true" =="true" ? "1" : "0");
+        configProperties.setProperty("tc_spanning_tree", "1");
         configProperties.setProperty("summary_interval", "1");
         configProperties.setProperty("clock_type", "E2E_TC");
         configProperties.setProperty("network_transport", "L2");
@@ -1042,9 +1047,9 @@ public class PTPConfigController {
         
         // P2P Transparent Clock Options
         configProperties.setProperty("priority1", "254");
-        configProperties.setProperty("free_running", "true" == "true" ? "1" : "0");
+        configProperties.setProperty("free_running", "1");
 		configProperties.setProperty("freq_est_interval", "3");
-        configProperties.setProperty("tc_spanning_tree", "true" =="true" ? "1" : "0");
+        configProperties.setProperty("tc_spanning_tree", "1");
 		configProperties.setProperty("summary_interval", "1");
         configProperties.setProperty("clock_type", "P2P_TC");
         configProperties.setProperty("network_transport", "L2");
@@ -1056,10 +1061,10 @@ public class PTPConfigController {
         outputArea.appendText(" 'G.8265.1' is selected \n");
         
         // G.8265.1 Options
-        configProperties.setProperty("serverOnly", "false" == "true" ? "1" : "0");
-		configProperties.setProperty("hybrid_e2e", "true" == "true" ? "1" : "0");
-		configProperties.setProperty("inhibit_multicast_service", "true" == "true" ? "1" : "0");
-		configProperties.setProperty("unicast_listen", "true" == "true" ? "1" : "0");
+        configProperties.setProperty("serverOnly", "0");
+		configProperties.setProperty("hybrid_e2e", "1");
+		configProperties.setProperty("inhibit_multicast_service", "1");
+		configProperties.setProperty("unicast_listen", "1");
 		configProperties.setProperty("unicast_req_duration", "60");
 		configProperties.setProperty("domainNumber", "4");
 		}
@@ -1073,7 +1078,7 @@ public class PTPConfigController {
 		configProperties.setProperty("logAnnounceInterval", "-3");
 		configProperties.setProperty("logSyncInterval", "-4");
 		configProperties.setProperty("logMinDelayReqInterval", "-4");
-		configProperties.setProperty("serverOnly", "false" == "true" ? "1" : "0");
+		configProperties.setProperty("serverOnly", "0");
 		configProperties.setProperty("G_8275_portDS_localPriorityField", "128");
 		configProperties.setProperty("domainNumber", "24");
         configProperties.setProperty("dataset_comparison", "G.8275.x");
@@ -1088,11 +1093,11 @@ public class PTPConfigController {
         configProperties.setProperty("G_8275_defaultDS_localPriorityField", "128");
 		configProperties.setProperty("maxStepsRemoved", "255");
 		configProperties.setProperty("logAnnounceInterval", "0");
-		configProperties.setProperty("serverOnly", "false" == "true" ? "1" : "0");
+		configProperties.setProperty("serverOnly", "0");
 		configProperties.setProperty("G_8275_portDS_localPriorityField", "128");
-		configProperties.setProperty("hybrid_e2e", "true" == "true" ? "1" : "0");
-		configProperties.setProperty("inhibit_multicast_service", "true" == "true" ? "1" : "0");
-		configProperties.setProperty("unicast_listen", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("hybrid_e2e", "1");
+		configProperties.setProperty("inhibit_multicast_service", "1");
+		configProperties.setProperty("unicast_listen", "1");
 		configProperties.setProperty("unicast_req_duration", "60");
 		configProperties.setProperty("domainNumber", "44");
         configProperties.setProperty("dataset_comparison", "G.8275.x");
@@ -1108,9 +1113,9 @@ public class PTPConfigController {
 		configProperties.setProperty("logSyncInterval", "-3");
 		configProperties.setProperty("syncReceiptTimeout", "3");
 		configProperties.setProperty("neighborPropDelayThresh", "800");
-		configProperties.setProperty("assume_two_step", "true" == "true" ? "1" : "0");
-		configProperties.setProperty("path_trace_enabled", "true" == "true" ? "1" : "0");
-		configProperties.setProperty("follow_up_info", "true" == "true" ? "1" : "0");
+		configProperties.setProperty("assume_two_step", "1");
+		configProperties.setProperty("path_trace_enabled", "1");
+		configProperties.setProperty("follow_up_info", "1");
         configProperties.setProperty("network_transport", "L2");
 		configProperties.setProperty("delay_mechanism", "P2P");
 		configProperties.setProperty("ptp_dst_macField", "01:80:C2:00:00:0E");
